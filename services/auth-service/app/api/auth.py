@@ -7,12 +7,11 @@ from datetime import datetime, timedelta, timezone
 import jwt
 from jwt.exceptions import InvalidTokenError
 
-from ..models.auth import TokenData
+from ..schemas.auth import TokenData, User
 from ..utils.bcrypt import verify_password
 from ..utils.getenv import get_env
 
 # TEMP -----------------------------
-from pydantic import BaseModel
 fake_users_db = {
     "johndoe": {
         "username": "johndoe",
@@ -22,11 +21,6 @@ fake_users_db = {
         "disabled": False,
     }
 }
-class User(BaseModel):
-    username: str
-    email: str | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
 class UserInDB(User):
     hashed_password: str
 # ---------------------------------

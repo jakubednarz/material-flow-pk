@@ -4,13 +4,12 @@ from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from typing import Annotated
 
-from ..schemas.auth import Token
-from ..crud.auth import authenticate_user, create_access_token, get_current_active_user
+from ..schemas.auth import Token, User
+from ..api.auth import authenticate_user, create_access_token, get_current_active_user
 from ..utils.getenv import get_env
 
 
 # TEMP -----------------------------
-from ..crud.auth import User
 fake_users_db = {
     "johndoe": {
         "username": "johndoe",
