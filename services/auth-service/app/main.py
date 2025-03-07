@@ -1,7 +1,6 @@
 from fastapi import FastAPI
+from .routers import auth
 
 app = FastAPI()
 
-@app.get('/')
-async def index():
-    return {"service": "auth"}
+app.include_router(auth.router)
