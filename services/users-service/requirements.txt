@@ -1,9 +1,18 @@
-fastapi==0.109.0
-uvicorn==0.27.0
+# app
+fastapi==0.115.11
+uvicorn==0.34.0
 
-sqlalchemy==2.0.25
-psycopg2-binary==2.9.9
+# db
+psycopg2==2.9.10
+pydantic==2.10.6
+sqlalchemy==2.0.38
+sqlmodel==0.0.24
 
-pydantic==2.6.1
+# utils
+pyjwt==2.10.1
+bcrypt==4.3.0
 
-httpx==0.26.0
+# dep
+httpx==0.28.1
+python-multipart==0.0.20
+dotenv==0.9.9
