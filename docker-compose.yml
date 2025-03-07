@@ -12,10 +12,9 @@ services:
     env_file:
       - .env
     depends_on:
-      - database
       - users-service
     networks:
-      - material-flow-network
+      - network
 
   users-service:
     build: ./services/users-service
@@ -27,9 +26,9 @@ services:
     env_file:
       - .env
     depends_on:
-      - database
+      - users-database
     networks:
-      - material-flow-network
+      - network
 
   warehouse-service:
     build: ./services/warehouse-service
@@ -41,9 +40,9 @@ services:
     env_file:
       - .env
     depends_on:
-      - database
+      - warehouse-database
     networks:
-      - material-flow-network
+      - network
 
   orders-service:
     build: ./services/orders-service
@@ -55,9 +54,9 @@ services:
     env_file:
       - .env
     depends_on:
-      - database
+      - orders-database
     networks:
-      - material-flow-network
+      - network
 
   analytics-service:
     build: ./services/analytics-service
@@ -69,25 +68,65 @@ services:
     env_file:
       - .env
     depends_on:
-      - database
+      - analytics-database
     networks:
-      - material-flow-network
+      - network
 
-  database:
+  users-database:
     image: postgres:15
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    env_file:
-      - .env
+      POSTGRES_DB: ${USERS_DB}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - users_pgdata:/var/lib/postgresql/data
     networks:
-      - material-flow-network
+      - network
+
+  warehouse-database:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${WAREHOUSE_DB}
+    ports:
+      - "5434:5432"
+    volumes:
+      - warehouse_pgdata:/var/lib/postgresql/data
+    networks:
+      - network
+
+  orders-database:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${ORDERS_DB}
+    ports:
+      - "5435:5432"
+    volumes:
+      - orders_pgdata:/var/lib/postgresql/data
+    networks:
+      - network
+
+  analytics-database:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${ANALYTICS_DB}
+    ports:
+      - "5436:5432"
+    volumes:
+      - analytics_pgdata:/var/lib/postgresql/data
+    networks:
+      - network
 
   nginx:
     image: nginx:latest
@@ -101,11 +140,14 @@ services:
       - orders-service
       - analytics-service
     networks:
-      - material-flow-network
+      - network
 
 networks:
-  material-flow-network:
+  network:
     driver: bridge
 
 volumes:
-  pgdata:
+  users_pgdata:
+  warehouse_pgdata:
+  orders_pgdata:
+  analytics_pgdata:
