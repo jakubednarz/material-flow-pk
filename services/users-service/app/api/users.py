@@ -32,6 +32,15 @@ def read_user(user_id: uuid.UUID, session: SessionDep) -> UserSchema:
     return UserSchema(**user.model_dump())
 
 
+def read_user_by_username(username: str, session: SessionDep) -> UserSchema:
+    statement = select(User).where(User.username == username)
+    user = session.exec(statement).first()
+    
+    if user is None: 
+        raise HTTPException(status_code=404, detail="User not found")
+    return UserSchema(**user.model_dump())
+
+
 # TODO
 def update_user():
     ...
