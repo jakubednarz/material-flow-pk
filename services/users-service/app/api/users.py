@@ -4,12 +4,14 @@ from ..schemas.users import UserSchema
 
 from ..database import SessionDep
 from ..models.users import User
+from ..utils.bcrypt import hash_password
 from sqlmodel import select
 import uuid
 
 
 def create_user(user: UserSchema, session: SessionDep) -> User:
     db_user = User(**user.model_dump())
+    db_user.password = hash_password(db_user.password)
 
     session.add(db_user)
     session.commit()
