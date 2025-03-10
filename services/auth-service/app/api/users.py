@@ -1,16 +1,13 @@
 from fastapi import HTTPException, status, Depends
 from jwt.exceptions import InvalidTokenError
-
 from typing import Annotated
 import jwt
+import requests
 
 from ..schemas.token import TokenDataSchema
 from ..schemas.user import UserSchema
-from ..api.auth import get_token_from_cookie
 from ..utils.getenv import get_env
-import requests
-
-
+from ..utils.token import get_token_from_cookie
 
 def get_user(username: str):
     try:
