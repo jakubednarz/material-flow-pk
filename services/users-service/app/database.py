@@ -6,7 +6,7 @@ from sqlmodel import Session, SQLModel, create_engine
 from dotenv import find_dotenv
 import os
 
-from .models.users import User  # noqa: F401
+from .models.users import *  # noqa: F403
 
 
 

@@ -8,7 +8,9 @@ class UserSchema(BaseModel):
     username: str
     password: str
     email: str | None = None
-    disabled: bool | None = None
+    first_name: str
+    last_name: str
+    disabled: bool = False
 
     class Config:
         from_attributes = True
