@@ -4,7 +4,10 @@ from ..schemas.users import UserSchema
 from ..api.users import create_user, read_all_users, read_user, read_user_by_username
 import uuid
 
+
+
 router = APIRouter()
+
 
 @router.on_event("startup")
 def on_startup():

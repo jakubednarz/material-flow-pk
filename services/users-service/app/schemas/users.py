@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 import uuid
 
+
+
 class UserSchema(BaseModel):
     id: uuid.UUID
     username: str

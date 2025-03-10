@@ -4,12 +4,16 @@ from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from typing import Annotated
 
-from ..schemas.auth import Token, UserSchema
-from ..api.auth import authenticate_user, create_access_token, get_current_active_user
+from ..schemas.token import TokenSchema
+from ..schemas.user import UserSchema
+from ..api.auth import authenticate_user, create_access_token
+from ..api.users import get_current_active_user
 from ..utils.getenv import get_env
 
 
+
 router = APIRouter()
+
 
 @router.post("/token")
 async def login_for_access_token(
@@ -34,7 +38,7 @@ async def login_for_access_token(
         expires=access_token_expires.total_seconds(),
         samesite="lax"
     )
-    return Token(access_token=access_token, token_type="bearer")
+    return TokenSchema(access_token=access_token, token_type="bearer")
 
 
 @router.get("/me", response_model=UserSchema)
