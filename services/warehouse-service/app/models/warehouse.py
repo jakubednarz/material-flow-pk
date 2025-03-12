@@ -8,7 +8,7 @@ from typing import Optional, List
 class Material(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str
-    code: str
+    code: str = Field(unique=True)
     description: str
     min_stock: float
     current_stock: float    
@@ -34,18 +34,18 @@ class MaterialReservation(SQLModel, table=True):
     expiration_date: Optional[date] = None
     status: str
 
-    material: Optional["Material"] = Relationship(back_populates="reservations", cascade_delete=True)
-    pallet: Optional["Pallet"] = Relationship(back_populates="reservations", cascade_delete=True) 
+    material: Optional["Material"] = Relationship(back_populates="reservations")
+    pallet: Optional["Pallet"] = Relationship(back_populates="reservations") 
 
 
 class MaterialMovement(SQLModel, table=True):
     __tablename__ = "material_movement"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    
-    pallet_id: uuid.UUID = Field(foreign_key="pallet.id") 
+
+    pallet_id: uuid.UUID = Field(foreign_key="pallet.id")
     movement_type: Optional[str]
-    
+
     source_location_id: uuid.UUID = Field(foreign_key="warehouse_location.id", nullable=True)
     destination_location_id: uuid.UUID = Field(foreign_key="warehouse_location.id")
 
@@ -54,20 +54,20 @@ class MaterialMovement(SQLModel, table=True):
     order_id: uuid.UUID
     user_id: uuid.UUID
 
-    pallet: Optional["Pallet"] = Relationship(back_populates="movements", cascade_delete=True)
+    pallet: Optional["Pallet"] = Relationship(back_populates="movements")
 
 
 
 class Product(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str
-    code: str
+    code: str = Field(unique=True)
     description: str
 
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
 
-    boms: List["BillOfMaterials"] = Relationship(back_populates="product", cascade_delete=True)
+    boms: List["BillOfMaterials"] = Relationship(back_populates="product")
 
 
 class BillOfMaterials(SQLModel, table=True):
@@ -84,8 +84,8 @@ class BillOfMaterials(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
 
-    product: Optional["Product"] = Relationship(back_populates="boms", cascade_delete=True)
-    bom_items: List["BOMItem"] = Relationship(back_populates="bom", cascade_delete=True)
+    product: Optional["Product"] = Relationship(back_populates="boms")
+    bom_items: List["BOMItem"] = Relationship(back_populates="bom")
 
 
 class BOMItem(SQLModel, table=True):
@@ -100,8 +100,8 @@ class BOMItem(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
 
-    bom: Optional[BillOfMaterials] = Relationship(back_populates="bom_items", cascade_delete=True)
-    material: Optional[Material] = Relationship(back_populates="bom_items", cascade_delete=True)
+    bom: Optional[BillOfMaterials] = Relationship(back_populates="bom_items")
+    material: Optional[Material] = Relationship(back_populates="bom_items")
 
 
 class Pallet(SQLModel, table=True):
@@ -119,7 +119,9 @@ class Pallet(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
 
-    reservations: List["MaterialReservation"] = Relationship(back_populates="pallet", cascade_delete=True)
+    reservations: List["MaterialReservation"] = Relationship(back_populates="pallet")
+    movements: List["MaterialMovement"] = Relationship(back_populates="pallet")
+    location: Optional["WarehouseLocation"] = Relationship(back_populates="pallets")
 
 
 class WarehouseLocation(SQLModel, table=True):
@@ -135,4 +137,4 @@ class WarehouseLocation(SQLModel, table=True):
     current_capacity: float
     status: str
 
-    pallets: List["Pallet"] = Relationship(back_populates="location", cascade_delete=True)
+    pallets: List["Pallet"] = Relationship(back_populates="location")
