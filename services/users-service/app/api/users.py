@@ -1,6 +1,6 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, Response
 
-from ..schemas.users import UserSchema
+from ..schemas.users import UserSchema, UserUpdateSchema, UserCreateSchema
 
 from ..database import SessionDep
 from ..models.users import User
@@ -10,7 +10,7 @@ import uuid
 
 
 
-def create_user(user: UserSchema, session: SessionDep):
+def create_user(user: UserCreateSchema, session: SessionDep):
     db_user = User(**user.model_dump())
     db_user.password = hash_password(db_user.password)
 
@@ -23,7 +23,7 @@ def create_user(user: UserSchema, session: SessionDep):
 def read_all_users(session: SessionDep):
     users = session.exec(select(User))
     return [
-        UserSchema(**user.model_dump())
+        UserSchema.model_validate(user)
         for user in users
     ]
 
@@ -32,7 +32,7 @@ def read_user(user_id: uuid.UUID, session: SessionDep):
     user = session.get(User, user_id)
     if user is None: 
         raise HTTPException(status_code=404, detail="User not found")
-    return UserSchema(**user.model_dump())
+    return UserSchema.model_validate(user)
 
 
 def read_user_by_username(username: str, session: SessionDep):
@@ -41,14 +41,29 @@ def read_user_by_username(username: str, session: SessionDep):
     
     if user is None: 
         raise HTTPException(status_code=404, detail="User not found")
-    return UserSchema(**user.model_dump())
+    return UserSchema.model_validate(user)
 
 
-# TODO
-def update_user():
-    ...
+def update_user(user_id: uuid.UUID, user_data: UserUpdateSchema, session: SessionDep):
+    db_user = session.get(User, user_id)
+
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
     
+    for key, value in user_data.model_dump(exclude_unset=True).items():
+        setattr(db_user, key, value)
+    db_user.password = hash_password(db_user.password)
     
-# TODO
-def delete_user():
-    ...
+    session.commit()
+    session.refresh(db_user)
+    
+    return UserSchema.model_validate(db_user)
+
+
+def delete_user(user_id: uuid.UUID, session: SessionDep):
+    db_user = session.get(User, user_id)
+    if db_user is None: 
+        raise HTTPException(status_code=404, detail="User not found")
+    session.delete(db_user)
+    session.commit()
+    return Response("User deleted")

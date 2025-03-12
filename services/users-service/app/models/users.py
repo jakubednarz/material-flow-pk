@@ -2,22 +2,7 @@ import uuid
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
 from typing import List, Optional
-
-
-
-class UserRole(SQLModel, table=True):
-    __tablename__ = "user_role"
-
-    user_id: uuid.UUID = Field(foreign_key="user.id", primary_key=True, nullable=False, ondelete="CASCADE")
-    role_id: int = Field(foreign_key="role.id", primary_key=True, nullable=False, ondelete="CASCADE")
-
-
-class Role(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    name: str
-    description: Optional[str] = None
-
-    users: List["User"] = Relationship(back_populates="roles", link_model=UserRole)
+from .enums import UserRoleEnum
 
 
 class User(SQLModel, table=True):    
@@ -33,7 +18,7 @@ class User(SQLModel, table=True):
     address: Optional[str] = None
     image: Optional[str] = None
 
-    roles: List["Role"] = Relationship(back_populates="users", link_model=UserRole)
+    role: UserRoleEnum
     activities: List["UserActivity"] = Relationship(back_populates="user")
 
     last_login: datetime = Field(default_factory=datetime.now)
@@ -45,7 +30,7 @@ class User(SQLModel, table=True):
 class UserActivity(SQLModel, table=True):
     __tablename__ = 'user_activity'
     
-    id: int = Field(default=None, primary_key=True)
+    id: int = Field(default=None, primary_key=True, sa_column_kwargs={"autoincrement": True})
     user_id: uuid.UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
     action: str
     details: str
