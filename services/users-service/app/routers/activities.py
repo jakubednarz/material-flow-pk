@@ -1,11 +1,11 @@
-from fastapi import APIRouter
-from ..api import activities
-from ..schemas.activities import UserActivitySchema
-from ..database import SessionDep
 import uuid
 
+from fastapi import APIRouter
 
- 
+from ..api import activities
+from ..database import SessionDep
+from ..schemas.activities import UserActivitySchema
+
 router = APIRouter(tags=["User Activity"])
 
 

@@ -1,8 +1,7 @@
 from fastapi import FastAPI
-from .routers import warehouse
+
 from .database import create_db_and_tables
-
-
+from .routers import warehouse
 
 app = FastAPI(title="warehouse-service")
 

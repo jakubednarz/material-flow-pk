@@ -1,7 +1,8 @@
-from pydantic import BaseModel
 import uuid
-from ..models.enums import UserRoleEnum
 
+from pydantic import BaseModel
+
+from ..models.enums import UserRoleEnum
 
 
 class UserSchema(BaseModel):

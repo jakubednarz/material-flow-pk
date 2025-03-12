@@ -1,8 +1,7 @@
 from fastapi import FastAPI
-from .routers import users, activities
+
 from .database import create_db_and_tables
-
-
+from .routers import activities, users
 
 app = FastAPI(title="users-service")
 

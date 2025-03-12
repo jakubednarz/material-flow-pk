@@ -1,19 +1,17 @@
+import os
 from typing import Annotated
 
+from dotenv import find_dotenv
 from fastapi import Depends
 from sqlmodel import Session, SQLModel, create_engine
 
-from dotenv import find_dotenv
-import os
-
 from .models.warehouse import *  # noqa: F403
-
-
 
 find_dotenv()
 USER_DATABASE_URL = os.getenv("WAREHOUSE_DB_URL")
 
 engine = create_engine(USER_DATABASE_URL)
+
 
 def create_db_and_tables():
     # SQLModel.metadata.drop_all(engine)

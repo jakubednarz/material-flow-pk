@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Query
-from ..database import SessionDep
-from ..schemas.users import UserSchema, UserUpdateSchema, UserCreateSchema
-from ..api import users
 import uuid
 
+from fastapi import APIRouter, Query
 
+from ..api import users
+from ..database import SessionDep
+from ..schemas.users import UserCreateSchema, UserSchema, UserUpdateSchema
 
 router = APIRouter(tags=["User"])
 
@@ -27,11 +27,12 @@ def get_user(user_id: uuid.UUID, session: SessionDep):
 
 
 @router.put("/users/{user_id}")
-def update_user_route(user_id: uuid.UUID, user_data: UserUpdateSchema, session: SessionDep):
+def update_user_route(
+    user_id: uuid.UUID, user_data: UserUpdateSchema, session: SessionDep
+):
     return users.update_user(user_id=user_id, user_data=user_data, session=session)
 
 
 @router.delete("/users/{user_id}")
 def delete_user_route(user_id: uuid.UUID, session: SessionDep):
     return users.delete_user(user_id=user_id, session=session)
-

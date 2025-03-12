@@ -1,8 +1,8 @@
 import uuid
-from datetime import datetime, date
-from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List
+from datetime import date, datetime
+from typing import List, Optional
 
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class Material(SQLModel, table=True):
@@ -11,7 +11,7 @@ class Material(SQLModel, table=True):
     code: str = Field(unique=True)
     description: str
     min_stock: float
-    current_stock: float    
+    current_stock: float
 
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
@@ -24,9 +24,9 @@ class MaterialReservation(SQLModel, table=True):
     __tablename__ = "material_reservation"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    
-    material_id: uuid.UUID = Field(foreign_key="material.id")  
-    pallet_id: uuid.UUID = Field(foreign_key="pallet.id") 
+
+    material_id: uuid.UUID = Field(foreign_key="material.id")
+    pallet_id: uuid.UUID = Field(foreign_key="pallet.id")
     user_id: uuid.UUID
 
     quantity: float
@@ -35,7 +35,7 @@ class MaterialReservation(SQLModel, table=True):
     status: str
 
     material: Optional["Material"] = Relationship(back_populates="reservations")
-    pallet: Optional["Pallet"] = Relationship(back_populates="reservations") 
+    pallet: Optional["Pallet"] = Relationship(back_populates="reservations")
 
 
 class MaterialMovement(SQLModel, table=True):
@@ -46,7 +46,9 @@ class MaterialMovement(SQLModel, table=True):
     pallet_id: uuid.UUID = Field(foreign_key="pallet.id")
     movement_type: Optional[str]
 
-    source_location_id: uuid.UUID = Field(foreign_key="warehouse_location.id", nullable=True)
+    source_location_id: uuid.UUID = Field(
+        foreign_key="warehouse_location.id", nullable=True
+    )
     destination_location_id: uuid.UUID = Field(foreign_key="warehouse_location.id")
 
     movement_date: datetime = Field(default_factory=datetime.now)
@@ -55,7 +57,6 @@ class MaterialMovement(SQLModel, table=True):
     user_id: uuid.UUID
 
     pallet: Optional["Pallet"] = Relationship(back_populates="movements")
-
 
 
 class Product(SQLModel, table=True):
@@ -79,7 +80,7 @@ class BillOfMaterials(SQLModel, table=True):
     name: str
     valid_from: date
     valid_to: Optional[date] = None
-    is_active: bool = True 
+    is_active: bool = True
 
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
@@ -95,7 +96,7 @@ class BOMItem(SQLModel, table=True):
     bom_id: uuid.UUID = Field(foreign_key="bill_of_materials.id")
     material_id: uuid.UUID = Field(foreign_key="material.id")
 
-    quantity: float  
+    quantity: float
 
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
@@ -128,7 +129,7 @@ class WarehouseLocation(SQLModel, table=True):
     __tablename__ = "warehouse_location"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    
+
     zone: Optional[str] = None
     rack: Optional[str] = None
     level: Optional[str] = None

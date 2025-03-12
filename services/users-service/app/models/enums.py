@@ -6,4 +6,3 @@ class UserRoleEnum(str, Enum):
     WAREHOUSE_WORKER = "warehouse_worker"
     LOGISTICS_SPECIALIST = "logistics_specialist"
     PRODUCTION_PLANNER = "production_planner"
-

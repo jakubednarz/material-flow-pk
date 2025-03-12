@@ -1,14 +1,15 @@
-from fastapi import HTTPException, status, Cookie
-from typing import Annotated, Optional
 from datetime import datetime, timedelta, timezone
+from typing import Annotated, Optional
+
 import jwt
+from fastapi import Cookie, HTTPException, status
 
 from ..utils.getenv import get_env
 
 
-
 def create_access_token(
-    data: dict, expires_delta: timedelta | None = None,
+    data: dict,
+    expires_delta: timedelta | None = None,
 ):
     to_encode = data.copy()
     if expires_delta:
@@ -16,7 +17,9 @@ def create_access_token(
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, key=get_env("AUTH_SECRET_KEY"), algorithm=get_env("AUTH_ALGORITHM"))
+    encoded_jwt = jwt.encode(
+        to_encode, key=get_env("AUTH_SECRET_KEY"), algorithm=get_env("AUTH_ALGORITHM")
+    )
     return encoded_jwt
 
 

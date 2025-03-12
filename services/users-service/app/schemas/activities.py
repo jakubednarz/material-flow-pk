@@ -1,7 +1,7 @@
 import uuid
-from pydantic import BaseModel
 from datetime import datetime
 
+from pydantic import BaseModel
 
 
 class UserActivitySchema(BaseModel):
@@ -9,4 +9,3 @@ class UserActivitySchema(BaseModel):
     action: str
     details: str
     created_at: datetime
-    

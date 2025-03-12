@@ -1,10 +1,11 @@
 import uuid
-from ..database import SessionDep
-from ..models.users import UserActivity
-from ..schemas.activities import UserActivitySchema
+
 from fastapi import HTTPException
 from sqlmodel import select
 
+from ..database import SessionDep
+from ..models.users import UserActivity
+from ..schemas.activities import UserActivitySchema
 
 
 def create_user_activity(user_activity: UserActivitySchema, session: SessionDep):
@@ -23,6 +24,6 @@ def get_user_activities(user_id: uuid.UUID, session: SessionDep):
         raise HTTPException(status_code=404, detail="No activities found for this user")
 
     return [
-        UserActivitySchema.model_validate(activity.model_dump()) 
+        UserActivitySchema.model_validate(activity.model_dump())
         for activity in user_activities
     ]
