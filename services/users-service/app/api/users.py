@@ -1,4 +1,4 @@
-from fastapi import HTTPException, Response
+from fastapi import HTTPException
 
 from ..schemas.users import UserSchema, UserUpdateSchema, UserCreateSchema
 
@@ -66,4 +66,4 @@ def delete_user(user_id: uuid.UUID, session: SessionDep):
         raise HTTPException(status_code=404, detail="User not found")
     session.delete(db_user)
     session.commit()
-    return Response("User deleted")
+    return {"response": "user deleted"}
