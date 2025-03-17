@@ -11,7 +11,7 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="login-page">
+    <div className="login-page overflow-hidden h-screen">
       <LoginForm />
     </div>
   );
