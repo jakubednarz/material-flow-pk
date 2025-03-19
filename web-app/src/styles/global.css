@@ -1,3 +1,32 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+
+
+
+@keyframes slideFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+#svg_first {
+    animation: slideFromLeft 0.8s forwards;
+    opacity: 0;
+}
+
+#svg_second {
+    animation: slideFromLeft 0.8s ease 0.2s forwards;
+    opacity: 0;
+}
+
+#svg_third {
+    animation: slideFromLeft 0.8s ease 0.4s forwards;
+    opacity: 0;
+}
