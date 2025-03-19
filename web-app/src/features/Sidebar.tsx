@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Typography } from "@mui/material";
 import NavButton from "../components/nav/NavButton";
+import { Link } from "react-router-dom";
 
 interface MenuItem {
   id: number;
+  path: string;
   group: string;
   name: string;
   icon: string;
@@ -40,6 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
          
           <nav className="flex flex-col mt-1">
             {groupedItems[group].map((item) => (
+              <Link key={item.id} to={item.path}>
               <NavButton
                 key={item.id}
                 text={item.name}
@@ -47,6 +50,8 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
                 isActive={active === item.id}
                 onClick={() => setActive(item.id)}
               />
+              </Link>
+
             ))}
           </nav>
 
