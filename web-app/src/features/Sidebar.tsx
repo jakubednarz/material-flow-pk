@@ -25,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
   }, {});
 
   return (
-    <div className="w-80 h-screen bg-white text-black flex flex-col py-5 px-2 border">
+    <div className="w-80 h-screen bg-white text-black flex flex-col py-5 px-2 border-r">
       {Object.keys(groupedItems).map((group, index) => (
         <div key={group} className="mb-4">
           <Typography
