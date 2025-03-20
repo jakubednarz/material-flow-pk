@@ -40,6 +40,12 @@ async def login_for_access_token(
     return TokenSchema(access_token=access_token, token_type="bearer")
 
 
+@router.post("/logout")
+async def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"detail": "Cookie deleted"}
+
+
 @router.get("/me", response_model=UserSchema)
 async def get_logged_user(
     current_user: Annotated[UserSchema, Depends(get_current_active_user)],
