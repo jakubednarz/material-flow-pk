@@ -22,6 +22,17 @@ export const authApi = {
       throw error;
     }
   },
+
+  logout: async () => {
+    try {
+      const response = await axios.post(`/auth/logout`, null, {
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   
   checkAuth: async () => {
     try {
