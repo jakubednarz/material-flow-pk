@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { authApi } from '../api/authApi';
+import React, { createContext, useState, useEffect } from "react";
+import { authApi } from "../api/authApi";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -15,7 +15,9 @@ export const AuthContext = createContext<AuthContextType>({
   logout: async () => {},
 });
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -39,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await authApi.login(username, password);
       setIsAuthenticated(true);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       throw error;
     }
   };
@@ -49,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await authApi.logout();
       setIsAuthenticated(false);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
       throw error;
     }
   };

@@ -18,13 +18,16 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
   const [active, setActive] = useState<number | null>(1);
 
-  const groupedItems = menuItems.reduce((groups: { [key: string]: MenuItem[] }, item) => {
-    if (!groups[item.group]) {
-      groups[item.group] = [];
-    }
-    groups[item.group].push(item);
-    return groups;
-  }, {});
+  const groupedItems = menuItems.reduce(
+    (groups: { [key: string]: MenuItem[] }, item) => {
+      if (!groups[item.group]) {
+        groups[item.group] = [];
+      }
+      groups[item.group].push(item);
+      return groups;
+    },
+    {}
+  );
 
   return (
     <div className="w-80 h-screen bg-white text-black flex flex-col py-5 px-2 border-r">
@@ -39,26 +42,24 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
           >
             {group}
           </Typography>
-         
+
           <nav className="flex flex-col mt-1">
             {groupedItems[group].map((item) => (
               <Link key={item.id} to={item.path}>
-              <NavButton
-                key={item.id}
-                text={item.name}
-                icon={item.icon}
-                isActive={active === item.id}
-                onClick={() => setActive(item.id)}
-              />
+                <NavButton
+                  key={item.id}
+                  text={item.name}
+                  icon={item.icon}
+                  isActive={active === item.id}
+                  onClick={() => setActive(item.id)}
+                />
               </Link>
-
             ))}
           </nav>
 
           {index < Object.keys(groupedItems).length - 1 && (
             <hr className="my-2 border-gray-300" />
           )}
-
         </div>
       ))}
     </div>

@@ -1,6 +1,6 @@
-import React from 'react';
-import { AuthProvider } from './contexts/AuthContext';
-import Router from './Router';
+import React from "react";
+import { AuthProvider } from "./contexts/AuthContext";
+import Router from "./Router";
 
 const App: React.FC = () => {
   return (

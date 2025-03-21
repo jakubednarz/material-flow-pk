@@ -1,6 +1,5 @@
 import { Button, ButtonProps } from "@mui/material";
 
-
 interface NavButtonProps extends ButtonProps {
   text: string;
   icon: string;
@@ -20,19 +19,19 @@ const NavButton: React.FC<NavButtonProps> = (p: NavButtonProps) => {
         padding: "13px",
         textTransform: "none",
         justifyContent: "flex-start",
-        borderRadius: '10px',
+        borderRadius: "10px",
         color: "black",
-        backgroundColor: p.isActive ? "#ecf6fe" : "transparent"
+        backgroundColor: p.isActive ? "#ecf6fe" : "transparent",
       }}
       {...p}
     >
-      <img 
+      <img
         src={p.icon}
         className={`w-5 mr-4 ${p.isActive ? "opacity-100" : "opacity-55"}`}
-        style={{ 
-          filter: p.isActive 
-            ? "brightness(0) invert(30%) sepia(99%) saturate(2000%) hue-rotate(195deg) brightness(100%) contrast(95%) opacity(0.8)" 
-            : "" 
+        style={{
+          filter: p.isActive
+            ? "brightness(0) invert(30%) sepia(99%) saturate(2000%) hue-rotate(195deg) brightness(100%) contrast(95%) opacity(0.8)"
+            : "",
         }}
         alt=""
       />
@@ -40,6 +39,5 @@ const NavButton: React.FC<NavButtonProps> = (p: NavButtonProps) => {
     </Button>
   );
 };
-
 
 export default NavButton;

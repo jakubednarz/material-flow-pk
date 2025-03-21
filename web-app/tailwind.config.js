@@ -11,10 +11,10 @@ module.exports = {
         sans: ["var(--font-geist-sans)", ...fontFamily.sans],
       },
       colors: {
-        "background": "#f0f5f5",
+        "background": "#f7fdff",
         "platinium": "#CCDBDC",
         "lighter_blue": "#9AD1D4",
-        "light_blue": "#80CED7",
+        "light_blue": "#ecf6fe",
         "celestial": "#36a0fc", 
         "dark_blue": "#003249"
       },
