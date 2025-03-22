@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import { useAuth } from "../../hooks/useAuth";
 import LoginLeftSection from "./LoginLeftSection";
 import SubmitButton from "./SubmitButton";

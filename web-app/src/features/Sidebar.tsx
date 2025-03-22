@@ -8,7 +8,7 @@ interface MenuItem {
   path: string;
   group: string;
   name: string;
-  icon: string;
+  icon: React.ReactNode;
 }
 
 interface SidebarProps {
