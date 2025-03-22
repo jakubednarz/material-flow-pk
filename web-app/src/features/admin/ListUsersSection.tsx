@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import Section from "../../components/Section";
+import EditUserForm from "../../components/forms/EditUserForm";
 
 interface User {
   id: string;
@@ -19,6 +20,9 @@ interface User {
   email?: string;
   first_name: string;
   last_name: string;
+  pesel?: string;
+  phone_number?: string;
+  address?: string;
   role: string;
   disabled: boolean;
 }
@@ -30,6 +34,9 @@ const usersData: User[] = [
     email: "jdoe@example.com",
     first_name: "John",
     last_name: "Doe",
+    pesel: "12345678901",
+    phone_number: "+48 123 456 789",
+    address: "Warszawa, ul. Marszałkowska 10",
     role: "Admin",
     disabled: false,
   },
@@ -39,29 +46,36 @@ const usersData: User[] = [
     email: "asmith@example.com",
     first_name: "Alice",
     last_name: "Smith",
+    pesel: "09876543210",
+    phone_number: "+48 987 654 321",
+    address: "Kraków, ul. Floriańska 15",
     role: "Warehouse Worker",
     disabled: false,
-  },
-  {
-    id: "3",
-    username: "bwayne",
-    email: "bwayne@example.com",
-    first_name: "Bruce",
-    last_name: "Wayne",
-    role: "Logistics Specialist",
-    disabled: true,
   },
 ];
 
 const ListUsersSection: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleEditUser = (id: string) => {
-    console.log("Edit user:", id);
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user);
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleUserUpdate = (updatedUser: User) => {
+    console.log("Updated User:", updatedUser);
+    setIsDialogOpen(false);
   };
 
   const filteredUsers = usersData.filter((user) =>
@@ -118,11 +132,12 @@ const ListUsersSection: React.FC = () => {
                     <span className="text-green-500 font-semibold">Active</span>
                   )}
                 </TableCell>
+
                 <TableCell className="text-center">
                   <Button
                     variant="contained"
                     size="small"
-                    onClick={() => handleEditUser(user.id)}
+                    onClick={() => handleEditUser(user)}
                     sx={{ bgcolor: "#36a0fc" }}
                   >
                     Edit
@@ -133,6 +148,15 @@ const ListUsersSection: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {selectedUser && (
+        <EditUserForm
+          isOpen={isDialogOpen}
+          onClose={handleDialogClose}
+          user={selectedUser}
+          onSubmit={handleUserUpdate}
+        />
+      )}
     </Section>
   );
 };
