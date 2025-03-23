@@ -6,28 +6,14 @@ import ListUsersSection from "../../features/admin/ListUsersSection";
 
 const Accounts: React.FC = () => {
   return (
-    <div className="w-full h-full">
-      <div className="flex w-full p-4 gap-4 ">
-        <div className="w-8/12 flex flex-col gap-4">
-          <div className="relative flex gap-4">
-            <Section title="Section title">
-              <Typography variant="h5" className="">
-                Additional Section
-              </Typography>
-            </Section>
-
-            <Section title="Section title">
-              <Typography variant="h5" className="">
-                Additional Section
-              </Typography>
-            </Section>
-          </div>
-
-          <ListUsersSection />
-        </div>
-
-        <div className="w-5/12 flex-col space-y-4">
-          <CreateUserSection />
+    <div className="flex w-full p-4 gap-4 ">
+      <div className="w-8/12 flex flex-col gap-4">
+        <div className="relative flex gap-4">
+          <Section title="Section title">
+            <Typography variant="h5" className="">
+              Additional Section
+            </Typography>
+          </Section>
 
           <Section title="Section title">
             <Typography variant="h5" className="">
@@ -35,6 +21,18 @@ const Accounts: React.FC = () => {
             </Typography>
           </Section>
         </div>
+
+        <ListUsersSection />
+      </div>
+
+      <div className="w-5/12 flex-col space-y-4">
+        <CreateUserSection />
+
+        <Section title="Section title">
+          <Typography variant="h5" className="">
+            Additional Section
+          </Typography>
+        </Section>
       </div>
     </div>
   );

@@ -1,9 +1,21 @@
 import React from "react";
+import ResourcesCatalogSection from "../../features/admin/ResourcesCatalogSection";
+import PalletTrackingSection from "../../features/admin/PalletTrackingSection";
+import WarehouseLocationsSection from "../../features/admin/WarehouseLocationsSection";
 
-type Props = {};
+const InventoryManagementPage: React.FC = () => {
+  return (
+    <div className="flex w-full p-4 gap-4">
+      <div className="w-8/12">
+        <ResourcesCatalogSection />
+      </div>
 
-const InventoryManagementPage = (props: Props) => {
-  return <div>InventoryManagementPage</div>;
+      <div className="w-5/12 flex-col space-y-4">
+        <PalletTrackingSection />
+        <WarehouseLocationsSection />
+      </div>
+    </div>
+  );
 };
 
 export default InventoryManagementPage;

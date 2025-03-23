@@ -102,7 +102,7 @@ const ListUsersSection: React.FC = () => {
         className="mt-5 rounded-lg"
         sx={{ boxShadow: "none" }}
       >
-        <Table>
+        <Table size="small">
           <TableHead className="bg-celestial bg-opacity-10">
             <TableRow>
               <TableCell className="font-semibold">Username</TableCell>
