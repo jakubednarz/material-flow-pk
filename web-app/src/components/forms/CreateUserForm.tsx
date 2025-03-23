@@ -1,15 +1,5 @@
 import React, { useState } from "react";
-import {
-  Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Button,
-  TextField,
-  Grid,
-  Box,
-} from "@mui/material";
+import { Typography, Button, TextField, Grid } from "@mui/material";
 import { CustomDialog } from "../../components/CustomDialog";
 
 interface CreateUserFormProps {

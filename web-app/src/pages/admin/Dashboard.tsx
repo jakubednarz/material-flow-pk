@@ -2,15 +2,19 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "../../features/Sidebar";
 import TopBar from "../../features/TopBar";
-import Profile from "./Profile";
-import Settings from "./Settings";
-import Accounts from "./Accounts";
-import ActivityHistory from "./ActivityHistory";
+import Profile from "./ProfilePage";
+import Accounts from "./AccountsPage";
+import ActivityHistory from "./ActivityHistoryPage";
 import PersonIcon from "@mui/icons-material/Person";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import HistoryRoundedIcon from "@mui/icons-material/HistoryRounded";
 import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
+import InventoryManagementPage from "./InventoryManagementPage";
+import WarehouseOperationsPage from "./WarehouseOperationsPage";
+import MonitoringAnalyticsPage from "./MonitoringAnalyticsPage";
+import InventoryRoundedIcon from "@mui/icons-material/InventoryRounded";
+import MoveDownRoundedIcon from "@mui/icons-material/MoveDownRounded";
+import BarChartRoundedIcon from "@mui/icons-material/BarChartRounded";
 
 const AdminDashboard: React.FC = () => {
   const menuItems = [
@@ -29,13 +33,6 @@ const AdminDashboard: React.FC = () => {
       icon: <PersonIcon />,
     },
     {
-      id: 3,
-      path: "/settings",
-      group: "Main panel",
-      name: "Settings",
-      icon: <SettingsRoundedIcon />,
-    },
-    {
       id: 4,
       path: "/accounts",
       group: "Human resources",
@@ -49,6 +46,27 @@ const AdminDashboard: React.FC = () => {
       name: "Activity History",
       icon: <HistoryRoundedIcon />,
     },
+    {
+      id: 6,
+      path: "/inventory-management",
+      group: "Warehouse",
+      name: "Inventory Management",
+      icon: <InventoryRoundedIcon />,
+    },
+    {
+      id: 7,
+      path: "/warehouse-operations",
+      group: "Warehouse",
+      name: "Warehouse Operations",
+      icon: <MoveDownRoundedIcon />,
+    },
+    {
+      id: 8,
+      path: "/monitoring-analytics",
+      group: "Warehouse",
+      name: "Monitoring & Analytics",
+      icon: <BarChartRoundedIcon />,
+    },
   ];
 
   return (
@@ -59,9 +77,20 @@ const AdminDashboard: React.FC = () => {
         <div className="flex-grow h-full overflow-auto">
           <Routes>
             <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
             <Route path="/accounts" element={<Accounts />} />
             <Route path="/activity-history" element={<ActivityHistory />} />
+            <Route
+              path="/inventory-management"
+              element={<InventoryManagementPage />}
+            />
+            <Route
+              path="/warehouse-operations"
+              element={<WarehouseOperationsPage />}
+            />
+            <Route
+              path="/monitoring-analytics"
+              element={<MonitoringAnalyticsPage />}
+            />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

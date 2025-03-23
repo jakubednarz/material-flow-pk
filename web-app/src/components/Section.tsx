@@ -8,7 +8,7 @@ interface SectionProps {
 
 const Section: React.FC<SectionProps> = (p: SectionProps) => {
   return (
-    <div className="flex-grow rounded-lg p-4 border bg-white">
+    <div className="flex-grow rounded-lg p-4 border bg-white shadow-sm">
       <Typography
         className="text-gray-500"
         sx={{

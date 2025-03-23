@@ -4,10 +4,6 @@ import {
   TextField,
   Grid,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Switch,
   FormControlLabel,
 } from "@mui/material";
@@ -33,13 +29,6 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
   ) => {
     const { name, value } = e.target as HTMLInputElement;
     setFormData((prev: typeof formData) => ({ ...prev, [name]: value }));
-  };
-
-  const handleRoleChange = (event: any) => {
-    setFormData((prev: typeof formData) => ({
-      ...prev,
-      role: event.target.value as string,
-    }));
   };
 
   const handleDisabledChange = () => {
