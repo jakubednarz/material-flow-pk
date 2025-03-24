@@ -39,6 +39,7 @@ export const CustomDialog: React.FC<CustomDialogProps> = ({
                 position: "absolute",
                 top: "0.5rem",
                 right: "0.5rem",
+                zIndex: 9999,
               }}
             >
               <svg
