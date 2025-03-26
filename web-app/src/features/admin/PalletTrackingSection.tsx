@@ -43,6 +43,7 @@ const PalletTrackingSection: React.FC = () => {
   );
 
   return (
+    // TODO search by id
     <Section>
       <Typography variant="h5">Pallet Tracking</Typography>
 
