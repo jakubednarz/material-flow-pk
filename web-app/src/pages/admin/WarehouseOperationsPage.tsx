@@ -1,11 +1,22 @@
-import React from 'react'
+import React from "react";
+import ResourceMovementsSection from "../../features/admin/ResourceMovementsSection";
+import ResourceReservationsSection from "../../features/admin/ResourceReservationsSection";
+import ReserveResourceSection from "../../features/admin/ReserveResourceSection";
 
-type Props = {}
-
-const WarehouseOperationsPage = (props: Props) => {
+const WarehouseOperationsPage: React.FC = () => {
   return (
-    <div>WarehouseOperationsPage</div>
-  )
-}
+    <div className="flex flex-col gap-4 p-4">
+      <div className="flex gap-4">
+        <div className="w-1/2">
+          <ResourceMovementsSection />
+        </div>
+        <div className="w-1/2 space-y-4">
+          <ReserveResourceSection />
+          <ResourceReservationsSection />
+        </div>
+      </div>
+    </div>
+  );
+};
 
-export default WarehouseOperationsPage
+export default WarehouseOperationsPage;

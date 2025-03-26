@@ -9,7 +9,7 @@ const Accounts: React.FC = () => {
     <div className="flex w-full p-4 gap-4 ">
       <div className="w-8/12 flex flex-col gap-4">
         <div className="relative flex gap-4">
-          <Section title="Section title">
+          <Section title="Number of active accounts">
             <Typography variant="h5" className="">
               Additional Section
             </Typography>
