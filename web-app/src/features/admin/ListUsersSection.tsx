@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import Section from "../../components/Section";
 import EditUserForm from "../../components/forms/EditUserForm";
+import { useUsers } from "../../hooks/useUsers";
 
 interface User {
   id: string;
@@ -27,34 +28,9 @@ interface User {
   disabled: boolean;
 }
 
-const usersData: User[] = [
-  {
-    id: "1",
-    username: "jdoe",
-    email: "jdoe@example.com",
-    first_name: "John",
-    last_name: "Doe",
-    pesel: "12345678901",
-    phone_number: "+48 123 456 789",
-    address: "Warszawa, ul. Marszałkowska 10",
-    role: "Admin",
-    disabled: false,
-  },
-  {
-    id: "2",
-    username: "asmith",
-    email: "asmith@example.com",
-    first_name: "Alice",
-    last_name: "Smith",
-    pesel: "09876543210",
-    phone_number: "+48 987 654 321",
-    address: "Kraków, ul. Floriańska 15",
-    role: "Warehouse Worker",
-    disabled: false,
-  },
-];
-
 const ListUsersSection: React.FC = () => {
+  const { users, loading, error, updateUser, deleteUser } = useUsers();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -73,14 +49,17 @@ const ListUsersSection: React.FC = () => {
     setSelectedUser(null);
   };
 
-  const handleUserUpdate = (updatedUser: User) => {
-    console.log("Updated User:", updatedUser);
+  const handleUserUpdate = async (updatedUser: User) => {
+    await updateUser(updatedUser);
     setIsDialogOpen(false);
   };
 
-  const filteredUsers = usersData.filter((user) =>
+  const filteredUsers = users.filter((user) =>
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) return <div>Ładowanie...</div>;
+  if (error) return <div>Błąd: {error.message}</div>;
 
   return (
     <Section>
