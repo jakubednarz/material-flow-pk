@@ -1,6 +1,7 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import { useState, useEffect } from "react";
 import { usersApi } from "../api/usersApi";
+import { useAuth } from "../hooks/useAuth";
 
 interface User {
   id: string;
@@ -30,11 +31,14 @@ export const UsersContext = createContext<UsersContextType | undefined>(
 );
 
 const useUsersManager = () => {
+  const { isAuthenticated } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchUsers = async () => {
+    if (!isAuthenticated) return;
+
     setLoading(true);
     try {
       const response = await usersApi.getUsers();
@@ -100,7 +104,7 @@ const useUsersManager = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [isAuthenticated]);
 
   return {
     users,
