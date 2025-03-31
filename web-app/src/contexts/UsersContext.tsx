@@ -92,6 +92,7 @@ const useUsersManager = () => {
     try {
       const response = await usersApi.createUser(newUser);
       setUsers((prevUsers) => [...prevUsers, response.data]);
+      fetchUsers();
     } catch (err) {
       const error =
         err instanceof Error

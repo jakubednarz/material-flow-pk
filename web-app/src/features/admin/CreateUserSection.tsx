@@ -15,7 +15,7 @@ const CreateUserSection: React.FC = () => {
   const roles = [
     { value: "admin", label: "Administrator" },
     { value: "warehouse_worker", label: "Warehouse Worker" },
-    { value: "logistic_specialist", label: "Logistics Specialist" },
+    { value: "logistics_specialist", label: "Logistics Specialist" },
     { value: "production_planner", label: "Production Planner" },
   ];
 
