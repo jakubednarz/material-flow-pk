@@ -1,17 +1,22 @@
 import { Button, ButtonProps } from "@mui/material";
 
-interface NavButtonProps extends ButtonProps {
+interface NavButtonProps extends Omit<ButtonProps, "color"> {
   text: string;
   icon: React.ReactNode;
   isActive: boolean;
 }
 
-const NavButton: React.FC<NavButtonProps> = (p: NavButtonProps) => {
+const NavButton: React.FC<NavButtonProps> = ({
+  isActive,
+  text,
+  icon,
+  ...rest
+}: NavButtonProps) => {
   return (
     <Button
       variant="text"
       className={`w-full flex items-center justify-start ${
-        p.isActive ? "hover:bg-[#e2f0fc]" : "hover:bg-gray-100"
+        isActive ? "hover:bg-[#e2f0fc]" : "hover:bg-gray-100"
       }`}
       disableRipple
       sx={{
@@ -21,21 +26,21 @@ const NavButton: React.FC<NavButtonProps> = (p: NavButtonProps) => {
         justifyContent: "flex-start",
         borderRadius: "10px",
         color: "black",
-        backgroundColor: p.isActive ? "#ecf6fe" : "transparent",
+        backgroundColor: isActive ? "#ecf6fe" : "transparent",
       }}
-      {...p}
+      {...rest} 
     >
       <div
-        className={`w-5 mr-4 ${p.isActive ? "opacity-100" : "opacity-55"}`}
+        className={`w-5 mr-4 ${isActive ? "opacity-100" : "opacity-55"}`}
         style={{
-          filter: p.isActive
+          filter: isActive
             ? "brightness(0) invert(30%) sepia(99%) saturate(2000%) hue-rotate(195deg) brightness(100%) contrast(95%) opacity(0.8)"
             : "",
         }}
       >
-        {p.icon}
+        {icon}
       </div>
-      {p.text}
+      {text}
     </Button>
   );
 };

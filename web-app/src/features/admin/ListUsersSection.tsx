@@ -29,7 +29,7 @@ interface User {
 }
 
 const ListUsersSection: React.FC = () => {
-  const { users, loading, error, updateUser, deleteUser } = useUsers();
+  const { users = [], loading, error, updateUser, deleteUser } = useUsers();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -55,7 +55,7 @@ const ListUsersSection: React.FC = () => {
   };
 
   const filteredUsers = users.filter((user) =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+    user?.username?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) return <div>Ładowanie...</div>;

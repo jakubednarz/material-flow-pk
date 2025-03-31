@@ -18,7 +18,7 @@ const CreateResourceSection: React.FC = () => {
     { value: "product", label: "Product" },
   ];
 
-  const [selectedResource, setSelectedResource] = useState("");
+  const [selectedResource, setSelectedResource] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleResourceChange = (event: any) => {
@@ -52,7 +52,11 @@ const CreateResourceSection: React.FC = () => {
 
       <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
         <InputLabel>Select Resource Type</InputLabel>
-        <Select onChange={handleResourceChange} label="Select Resource Type">
+        <Select
+          onChange={handleResourceChange}
+          value={selectedResource}
+          label="Select Resource Type"
+        >
           {resources.map((resource) => (
             <MenuItem key={resource.value} value={resource.value}>
               {resource.label}
