@@ -9,6 +9,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import CreateUserForm from "../../components/forms/CreateUserForm";
+import { useUsers } from "../../hooks/useUsers";
 
 const CreateUserSection: React.FC = () => {
   const roles = [
@@ -18,7 +19,9 @@ const CreateUserSection: React.FC = () => {
     { value: "production_planner", label: "Production Planner" },
   ];
 
-  const [selectedRole, setSelectedRole] = useState("");
+  const { createUser } = useUsers();
+
+  const [selectedRole, setSelectedRole] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleRoleChange = (event: any) => {
@@ -33,14 +36,22 @@ const CreateUserSection: React.FC = () => {
     setIsDialogOpen(false);
   };
 
-  const handleFormSubmit = (userData: {
+  const handleFormSubmit = async (userData: {
     username: string;
     password: string;
     first_name: string;
     last_name: string;
   }) => {
-    console.log("User Created:", { ...userData, role: selectedRole });
-    setIsDialogOpen(false);
+    try {
+      await createUser({
+        ...userData,
+        role: selectedRole,
+        disabled: false,
+      });
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -51,7 +62,11 @@ const CreateUserSection: React.FC = () => {
 
       <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
         <InputLabel>Select Role</InputLabel>
-        <Select onChange={handleRoleChange} label="Select Role">
+        <Select
+          onChange={handleRoleChange}
+          value={selectedRole}
+          label="Select Role"
+        >
           {roles.map((role) => (
             <MenuItem key={role.value} value={role.value}>
               {role.label}

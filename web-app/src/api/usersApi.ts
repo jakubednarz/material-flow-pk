@@ -36,10 +36,10 @@ export const usersApi = {
 
   createUser: async (newUser: any) => {
     try {
-      const response = await axios.get(`/users/users`, {
+      const response = await axios.post(`/users/create/`, newUser, {
         withCredentials: true,
       });
-      return response;
+      return response.data;
     } catch (error) {
       throw error;
     }
