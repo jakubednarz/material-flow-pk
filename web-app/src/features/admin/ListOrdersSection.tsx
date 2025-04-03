@@ -13,9 +13,12 @@ import {
   FormControl,
   InputLabel,
   IconButton,
+  Button,
 } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import EditIcon from "@mui/icons-material/Edit";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 
 type Order = {
   id: string;
@@ -23,7 +26,7 @@ type Order = {
   created_at: string;
   expected_completion: string;
   source: string;
-  destination: string;
+  priority: "Low" | "Medium" | "High";
   item_count: number;
 };
 
@@ -34,7 +37,7 @@ const orders: Order[] = [
     created_at: "2025-04-01T10:00:00Z",
     expected_completion: "2025-04-10T10:00:00Z",
     source: "Warehouse A",
-    destination: "Production Line 1",
+    priority: "High",
     item_count: 5,
   },
   {
@@ -43,7 +46,7 @@ const orders: Order[] = [
     created_at: "2025-03-28T14:30:00Z",
     expected_completion: "2025-04-05T14:30:00Z",
     source: "Supplier X",
-    destination: "Warehouse B",
+    priority: "Medium",
     item_count: 10,
   },
   {
@@ -52,54 +55,46 @@ const orders: Order[] = [
     created_at: "2025-03-20T09:00:00Z",
     expected_completion: "2025-03-25T09:00:00Z",
     source: "Warehouse C",
-    destination: "Production Line 2",
+    priority: "Low",
     item_count: 3,
   },
 ];
 
 const ListOrdersSection: React.FC = () => {
-  const [searchId, setSearchId] = useState("");
+  const [searchPriority, setSearchPriority] = useState("");
   const [searchStatus, setSearchStatus] = useState("");
   const [searchDate, setSearchDate] = useState("");
 
-  const handleSearchIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchId(e.target.value);
-  };
-
-  const handleSearchStatusChange = (
-    e: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setSearchStatus(e.target.value as string);
-  };
-
-  const handleSearchDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchDate(e.target.value);
-  };
-
-  const filteredOrders = orders.filter((order) => {
-    return (
-      (searchId === "" ||
-        order.id.toLowerCase().includes(searchId.toLowerCase())) &&
+  const filteredOrders = orders.filter(
+    (order) =>
+      (searchPriority === "" || order.priority === searchPriority) &&
       (searchStatus === "" || order.status === searchStatus) &&
       (searchDate === "" || order.created_at.startsWith(searchDate))
-    );
-  });
+  );
 
   return (
     <>
       <div className="flex gap-4 my-4">
-        <TextField
-          label="Search by ID"
-          variant="outlined"
-          value={searchId}
-          onChange={handleSearchIdChange}
-          className="flex-grow"
-        />
+        <FormControl variant="outlined" className="flex-grow">
+          <InputLabel>Filter by Priority</InputLabel>
+          <Select
+            value={searchPriority}
+            onChange={(e) => setSearchPriority(e.target.value)}
+            label="Filter by Priority"
+          >
+            <MenuItem value="">
+              <em>All</em>
+            </MenuItem>
+            <MenuItem value="Low">Low</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="High">High</MenuItem>
+          </Select>
+        </FormControl>
         <FormControl variant="outlined" className="flex-grow">
           <InputLabel>Filter by Status</InputLabel>
           <Select
             value={searchStatus}
-            onChange={() => handleSearchStatusChange}
+            onChange={(e) => setSearchStatus(e.target.value)}
             label="Filter by Status"
           >
             <MenuItem value="">
@@ -112,11 +107,11 @@ const ListOrdersSection: React.FC = () => {
           </Select>
         </FormControl>
         <TextField
-          label="Filter by Date (YYYY-MM-DD)"
+          label="Filter by Date"
           variant="outlined"
           type="date"
           value={searchDate}
-          onChange={handleSearchDateChange}
+          onChange={(e) => setSearchDate(e.target.value)}
           InputLabelProps={{ shrink: true }}
           className="flex-grow"
         />
@@ -127,8 +122,9 @@ const ListOrdersSection: React.FC = () => {
           <TableHead className="bg-celestial bg-opacity-10">
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Created At</TableCell>
+              <TableCell>Expected Completion</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Priority</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -137,9 +133,10 @@ const ListOrdersSection: React.FC = () => {
               <TableRow key={order.id}>
                 <TableCell>{order.id}</TableCell>
                 <TableCell>
-                  {new Date(order.created_at).toLocaleDateString()}
+                  {new Date(order.expected_completion).toLocaleDateString()}
                 </TableCell>
                 <TableCell>{order.status}</TableCell>
+                <TableCell>{order.priority}</TableCell>
                 <TableCell align="center">
                   <IconButton
                     onClick={() => console.log("View Details", order.id)}
@@ -150,6 +147,16 @@ const ListOrdersSection: React.FC = () => {
                     onClick={() => console.log("Edit Order", order.id)}
                   >
                     <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => console.log("Approve Order", order.id)}
+                  >
+                    <CheckIcon color="success" />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => console.log("Reject Order", order.id)}
+                  >
+                    <CloseIcon color="error" />
                   </IconButton>
                 </TableCell>
               </TableRow>
