@@ -5,10 +5,9 @@ import {
   Edit,
   CalendarToday,
   Inventory,
-  LocalShipping,
-  BusinessOutlined,
 } from "@mui/icons-material";
 import { CustomDialog } from "../CustomDialog";
+import StockProgressBar from "./StockProgressBar";
 
 type Supplier = {
   id: string;
@@ -45,20 +44,6 @@ const ResourceDetails: React.FC<ResourceDetailsProps> = ({
 }) => {
   const isLowStock = resource.current_stock < resource.min_stock;
   const stockStatusColor = isLowStock ? "text-red-600" : "text-green-600";
-
-  const StockProgressBar = () => {
-    const percentage = (resource.current_stock / resource.min_stock) * 100;
-    const progressColor = isLowStock ? "bg-red-500" : "bg-green-500";
-
-    return (
-      <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 overflow-hidden">
-        <div
-          className={`${progressColor} h-4 rounded-full transition-all duration-300 ease-in-out`}
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
-    );
-  };
 
   return (
     <CustomDialog
@@ -132,7 +117,11 @@ const ResourceDetails: React.FC<ResourceDetailsProps> = ({
                 </div>
               </div>
             </div>
-            <StockProgressBar />
+            <StockProgressBar
+              currentStock={resource.current_stock}
+              minStock={resource.min_stock}
+              isLowStock={isLowStock}
+            />
           </div>
 
           <div>
