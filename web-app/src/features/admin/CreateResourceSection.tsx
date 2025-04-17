@@ -8,7 +8,6 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import CreateUserForm from "../../components/forms/CreateUserForm";
 import CreateResourceForm from "../../components/forms/CreateResourceForm";
 
 const CreateResourceSection: React.FC = () => {

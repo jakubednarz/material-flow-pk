@@ -11,7 +11,7 @@ const Accounts: React.FC = () => {
         <div className="relative flex gap-4">
           <Section title="Number of active accounts">
             <Typography variant="h5" className="">
-              Additional Section
+              Number
             </Typography>
           </Section>
 
@@ -28,9 +28,9 @@ const Accounts: React.FC = () => {
       <div className="w-5/12 flex-col space-y-4">
         <CreateUserSection />
 
-        <Section title="Section title">
+        <Section title="Workforce Distribution">
           <Typography variant="h5" className="">
-            Additional Section
+            Bar/Pie Chart
           </Typography>
         </Section>
       </div>
