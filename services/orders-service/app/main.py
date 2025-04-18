@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+from .database import create_db_and_tables
+from .routers import orders
+
+app = FastAPI(title="orders-service")
 
 
-@app.get("/")
-async def index():
-    return {"service": "orders"}
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
 
 
-@app.get("/orders")
-async def users():
-    return {"endpoint": "orders list"}
+app.include_router(orders.router)
