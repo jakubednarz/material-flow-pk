@@ -4,10 +4,18 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from ..models.warehouse import PalletItemType
+
 
 class PalletSchema(BaseModel):
     id: uuid.UUID
-    material_id: uuid.UUID
+
+    item_type: PalletItemType = PalletItemType.MATERIAL
+
+    material_id: Optional[uuid.UUID]
+    product_id: Optional[uuid.UUID]
+    bom_id: Optional[uuid.UUID]
+
     location_id: uuid.UUID
 
     code: str
@@ -22,7 +30,12 @@ class PalletSchema(BaseModel):
 
 
 class PalletCreateSchema(BaseModel):
-    material_id: uuid.UUID
+    item_type: PalletItemType = PalletItemType.MATERIAL
+
+    material_id: Optional[uuid.UUID]
+    product_id: Optional[uuid.UUID]
+    bom_id: Optional[uuid.UUID]
+
     location_id: uuid.UUID
 
     code: str
