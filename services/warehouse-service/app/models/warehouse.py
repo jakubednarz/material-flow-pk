@@ -1,8 +1,15 @@
 import uuid
 from datetime import date, datetime
+from enum import Enum
 from typing import List, Optional
 
 from sqlmodel import Field, Relationship, SQLModel
+
+
+class PalletItemType(str, Enum):
+    MATERIAL = "Material"
+    PRODUCT = "Product"
+    BOM = "BillOfMaterials"
 
 
 class Material(SQLModel, table=True):
@@ -18,6 +25,7 @@ class Material(SQLModel, table=True):
 
     reservations: List["MaterialReservation"] = Relationship(back_populates="material")
     bom_items: List["BOMItem"] = Relationship(back_populates="material")
+    pallets: List["Pallet"] = Relationship(back_populates="material")
 
 
 class MaterialReservation(SQLModel, table=True):
@@ -69,6 +77,7 @@ class Product(SQLModel, table=True):
     updated_at: Optional[datetime] = None
 
     boms: List["BillOfMaterials"] = Relationship(back_populates="product")
+    pallets: List["Pallet"] = Relationship(back_populates="product")
 
 
 class BillOfMaterials(SQLModel, table=True):
@@ -87,6 +96,7 @@ class BillOfMaterials(SQLModel, table=True):
 
     product: Optional["Product"] = Relationship(back_populates="boms")
     bom_items: List["BOMItem"] = Relationship(back_populates="bom")
+    pallets: List["Pallet"] = Relationship(back_populates="bom")
 
 
 class BOMItem(SQLModel, table=True):
@@ -107,7 +117,15 @@ class BOMItem(SQLModel, table=True):
 
 class Pallet(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    material_id: uuid.UUID = Field(foreign_key="material.id")
+
+    item_type: PalletItemType = Field(default=PalletItemType.MATERIAL)
+
+    material_id: Optional[uuid.UUID] = Field(foreign_key="material.id", nullable=True)
+    product_id: Optional[uuid.UUID] = Field(foreign_key="product.id", nullable=True)
+    bom_id: Optional[uuid.UUID] = Field(
+        foreign_key="bill_of_materials.id", nullable=True
+    )
+
     location_id: uuid.UUID = Field(foreign_key="warehouse_location.id")
 
     code: str = Field(unique=True)
@@ -123,6 +141,10 @@ class Pallet(SQLModel, table=True):
     reservations: List["MaterialReservation"] = Relationship(back_populates="pallet")
     movements: List["MaterialMovement"] = Relationship(back_populates="pallet")
     location: Optional["WarehouseLocation"] = Relationship(back_populates="pallets")
+
+    material: Optional["Material"] = Relationship(back_populates="pallets")
+    product: Optional["Product"] = Relationship(back_populates="pallets")
+    bom: Optional["BillOfMaterials"] = Relationship(back_populates="pallets")
 
 
 class WarehouseLocation(SQLModel, table=True):
