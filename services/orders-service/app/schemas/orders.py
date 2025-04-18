@@ -5,8 +5,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class OrderSchema(BaseModel):
-    id: uuid.UUID
+class OrderBaseSchema(BaseModel):
     order_number: str
 
     type: str
@@ -26,3 +25,11 @@ class OrderSchema(BaseModel):
     approver_id: Optional[uuid.UUID] = None
 
     notes: Optional[str] = None
+
+
+class OrderCreateSchema(OrderBaseSchema):
+    pass
+
+
+class OrderUpdateSchema(OrderBaseSchema):
+    id: uuid.UUID

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from .database import create_db_and_tables
-from .routers import orders
+from .routers import order_pallet, orders
 
 app = FastAPI(title="orders-service")
 
@@ -12,3 +12,4 @@ def on_startup():
 
 
 app.include_router(orders.router)
+app.include_router(order_pallet.router)
