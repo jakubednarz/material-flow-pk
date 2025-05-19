@@ -1,46 +1,38 @@
 import uuid
 from datetime import date, datetime
+from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel
 
-from ..models.warehouse import PalletItemType
+
+class PalletStatus(str, Enum):
+    AVAILABLE = "Available"
+    RESERVED = "Reserved"
+    BLOCKED = "Blocked"
 
 
-class PalletSchema(BaseModel):
-    id: uuid.UUID
-
-    item_type: PalletItemType = PalletItemType.MATERIAL
-
-    material_id: Optional[uuid.UUID]
-    product_id: Optional[uuid.UUID]
-    bom_id: Optional[uuid.UUID]
-
+class PalletBaseSchema(BaseModel):
+    resource_id: Optional[uuid.UUID] = None
     location_id: uuid.UUID
 
     code: str
     quantity: float
-    status: Optional[str] = None
+    status: Optional[PalletStatus] = PalletStatus.AVAILABLE
     production_date: date
     expiry_date: Optional[date] = None
     batch_number: str
 
+
+class PalletCreateSchema(PalletBaseSchema):
+    pass
+
+
+class PalletReadSchema(PalletBaseSchema):
+    id: uuid.UUID
     created_at: datetime
     updated_at: Optional[datetime] = None
 
 
-class PalletCreateSchema(BaseModel):
-    item_type: PalletItemType = PalletItemType.MATERIAL
-
-    material_id: Optional[uuid.UUID]
-    product_id: Optional[uuid.UUID]
-    bom_id: Optional[uuid.UUID]
-
-    location_id: uuid.UUID
-
-    code: str
-    quantity: float
-    status: Optional[str] = None
-    production_date: date
-    expiry_date: Optional[date] = None
-    batch_number: str
+class PalletUpdateSchema(PalletBaseSchema):
+    id: uuid.UUID

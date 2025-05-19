@@ -5,14 +5,15 @@ from fastapi import APIRouter
 from ..api import warehouse_location
 from ..database import SessionDep
 from ..schemas.warehouse_location import (
+    WarehouseLocationBaseSchema,
     WarehouseLocationCreateSchema,
-    WarehouseLocationSchema,
+    WarehouseLocationReadSchema,
 )
 
 router = APIRouter(tags=["Warehouse Location"])
 
 
-@router.post("/warehouse/locations/", response_model=WarehouseLocationSchema)
+@router.post("/warehouse/locations/", response_model=WarehouseLocationBaseSchema)
 def create_warehouse_location_route(
     location: WarehouseLocationCreateSchema, session: SessionDep
 ):
@@ -21,13 +22,13 @@ def create_warehouse_location_route(
     )
 
 
-@router.get("/warehouse/locations/", response_model=list[WarehouseLocationSchema])
+@router.get("/warehouse/locations/", response_model=list[WarehouseLocationReadSchema])
 def get_all_warehouse_locations_route(session: SessionDep):
     return warehouse_location.read_all_warehouse_locations(session=session)
 
 
 @router.get(
-    "/warehouse/locations/{location_id}", response_model=WarehouseLocationSchema
+    "/warehouse/locations/{location_id}", response_model=WarehouseLocationBaseSchema
 )
 def get_warehouse_location_route(location_id: uuid.UUID, session: SessionDep):
     return warehouse_location.read_warehouse_location(
@@ -36,7 +37,7 @@ def get_warehouse_location_route(location_id: uuid.UUID, session: SessionDep):
 
 
 @router.put(
-    "/warehouse/locations/{location_id}", response_model=WarehouseLocationSchema
+    "/warehouse/locations/{location_id}", response_model=WarehouseLocationBaseSchema
 )
 def update_warehouse_location_route(
     location_id: uuid.UUID,

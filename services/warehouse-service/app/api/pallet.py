@@ -4,11 +4,19 @@ from fastapi import HTTPException
 from sqlmodel import select
 
 from ..database import SessionDep
-from ..models.warehouse import Pallet
-from ..schemas.pallet import PalletCreateSchema, PalletSchema
+from ..models.warehouse import Pallet, Resource, WarehouseLocation
+from ..schemas.pallet import PalletCreateSchema, PalletReadSchema, PalletUpdateSchema
 
 
 def create_pallet(pallet: PalletCreateSchema, session: SessionDep):
+    resource = session.get(Resource, pallet.resource_id)
+    if resource is None:
+        raise HTTPException(status_code=404, detail="Resource not found")
+
+    location = session.get(WarehouseLocation, pallet.location_id)
+    if location is None:
+        raise HTTPException(status_code=404, detail="Location not found")
+
     db_pallet = Pallet(**pallet.model_dump())
     session.add(db_pallet)
     session.commit()
@@ -18,14 +26,14 @@ def create_pallet(pallet: PalletCreateSchema, session: SessionDep):
 
 def read_all_pallets(session: SessionDep):
     pallets = session.exec(select(Pallet)).all()
-    return [PalletSchema(**pallet.model_dump()) for pallet in pallets]
+    return [PalletReadSchema(**pallet.model_dump()) for pallet in pallets]
 
 
 def read_pallet(pallet_id: uuid.UUID, session: SessionDep):
     pallet = session.get(Pallet, pallet_id)
     if pallet is None:
         raise HTTPException(status_code=404, detail="Pallet not found")
-    return PalletSchema(**pallet.model_dump())
+    return PalletReadSchema(**pallet.model_dump())
 
 
 def update_pallet(
@@ -38,7 +46,7 @@ def update_pallet(
         setattr(db_pallet, key, value)
     session.commit()
     session.refresh(db_pallet)
-    return PalletSchema(**db_pallet.model_dump())
+    return PalletUpdateSchema(**db_pallet.model_dump())
 
 
 def delete_pallet(pallet_id: uuid.UUID, session: SessionDep):

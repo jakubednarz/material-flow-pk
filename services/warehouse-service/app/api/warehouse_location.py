@@ -7,7 +7,8 @@ from ..database import SessionDep
 from ..models.warehouse import WarehouseLocation
 from ..schemas.warehouse_location import (
     WarehouseLocationCreateSchema,
-    WarehouseLocationSchema,
+    WarehouseLocationReadSchema,
+    WarehouseLocationUpdateSchema,
 )
 
 
@@ -23,14 +24,14 @@ def create_warehouse_location(
 
 def read_all_warehouse_locations(session: SessionDep):
     locations = session.exec(select(WarehouseLocation)).all()
-    return [WarehouseLocationSchema(**location.model_dump()) for location in locations]
+    return locations
 
 
 def read_warehouse_location(location_id: uuid.UUID, session: SessionDep):
     location = session.get(WarehouseLocation, location_id)
     if location is None:
         raise HTTPException(status_code=404, detail="Location not found")
-    return WarehouseLocationSchema(**location.model_dump())
+    return location
 
 
 def update_warehouse_location(
@@ -45,7 +46,7 @@ def update_warehouse_location(
         setattr(db_location, key, value)
     session.commit()
     session.refresh(db_location)
-    return WarehouseLocationSchema(**db_location.model_dump())
+    return WarehouseLocationUpdateSchema(**db_location.model_dump())
 
 
 def delete_warehouse_location(location_id: uuid.UUID, session: SessionDep):
