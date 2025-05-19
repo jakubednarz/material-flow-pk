@@ -6,35 +6,133 @@ from typing import List, Optional
 from sqlmodel import Field, Relationship, SQLModel
 
 
-class PalletItemType(str, Enum):
+class ResourceType(str, Enum):
     MATERIAL = "Material"
     PRODUCT = "Product"
     BOM = "BillOfMaterials"
 
 
-class Material(SQLModel, table=True):
+class PalletStatus(str, Enum):
+    AVAILABLE = "Available"
+    RESERVED = "Reserved"
+    BLOCKED = "Blocked"
+
+
+class Resource(SQLModel, table=True):
+    """
+    Class representing a resource in the warehouse.
+    A resource can be a material, product, or BOM (Bill of Materials).
+    """
+
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str
-    code: str = Field(unique=True)
-    description: str
-    min_stock: float
-    current_stock: float
+    code: str = Field(unique=True, index=True)
+    description: Optional[str] = None
+    type: ResourceType = Field(index=True)
+
+    min_stock: Optional[float] = None
+    quantity: float = 0
+
+    # BOM attrs
+    valid_from: Optional[date] = None
+    valid_to: Optional[date] = None
+    is_active: bool = True
 
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
 
-    reservations: List["MaterialReservation"] = Relationship(back_populates="material")
-    bom_items: List["BOMItem"] = Relationship(back_populates="material")
-    pallets: List["Pallet"] = Relationship(back_populates="material")
+    pallets: List["Pallet"] = Relationship(back_populates="resource")
+    reservations: List["ResourceReservation"] = Relationship(back_populates="resource")
+
+    as_material_in_boms: List["BOMItem"] = Relationship(
+        back_populates="material",
+        sa_relationship_kwargs={"primaryjoin": "Resource.id==BOMItem.material_id"},
+    )
+
+    product_compositions: List["ProductComposition"] = Relationship(
+        back_populates="product",
+        sa_relationship_kwargs={
+            "primaryjoin": "Resource.id==ProductComposition.product_id"
+        },
+    )
+
+    as_bom_in_products: List["ProductComposition"] = Relationship(
+        back_populates="bom",
+        sa_relationship_kwargs={
+            "primaryjoin": "Resource.id==ProductComposition.bom_id"
+        },
+    )
+
+    bom_items: List["BOMItem"] = Relationship(
+        back_populates="bom",
+        sa_relationship_kwargs={"primaryjoin": "Resource.id==BOMItem.bom_id"},
+    )
 
 
-class MaterialReservation(SQLModel, table=True):
-    __tablename__ = "material_reservation"
+class BOMItem(SQLModel, table=True):
+    """
+    BOMItem represents an item in a Bill of Materials (BOM).
+    """
+
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    bom_id: uuid.UUID = Field(foreign_key="resource.id", index=True)
+    material_id: uuid.UUID = Field(foreign_key="resource.id", index=True)
+
+    quantity: float
+    unit: str
+
+    bom: "Resource" = Relationship(
+        back_populates="bom_items",
+        sa_relationship_kwargs={
+            "primaryjoin": "BOMItem.bom_id==Resource.id",
+            "foreign_keys": "BOMItem.bom_id",
+        },
+    )
+    material: "Resource" = Relationship(
+        back_populates="as_material_in_boms",
+        sa_relationship_kwargs={
+            "primaryjoin": "BOMItem.material_id==Resource.id",
+            "foreign_keys": "BOMItem.material_id",
+        },
+    )
+
+
+class ProductComposition(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    product_id: uuid.UUID = Field(foreign_key="resource.id", index=True)
+
+    bom_id: Optional[uuid.UUID] = Field(
+        foreign_key="resource.id", nullable=True, index=True
+    )
+    material_id: Optional[uuid.UUID] = Field(
+        foreign_key="resource.id", nullable=True, index=True
+    )
+
+    quantity: float
+
+    product: "Resource" = Relationship(
+        back_populates="product_compositions",
+        sa_relationship_kwargs={
+            "primaryjoin": "ProductComposition.product_id==Resource.id",
+            "foreign_keys": "ProductComposition.product_id",
+        },
+    )
+    bom: Optional["Resource"] = Relationship(
+        back_populates="as_bom_in_products",
+        sa_relationship_kwargs={
+            "primaryjoin": "ProductComposition.bom_id==Resource.id",
+            "foreign_keys": "ProductComposition.bom_id",
+        },
+    )
+
+
+class ResourceReservation(SQLModel, table=True):
+    __tablename__ = "resource_reservation"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 
-    material_id: uuid.UUID = Field(foreign_key="material.id")
-    pallet_id: uuid.UUID = Field(foreign_key="pallet.id")
+    resource_id: uuid.UUID = Field(foreign_key="resource.id", index=True)
+    pallet_id: uuid.UUID = Field(foreign_key="pallet.id", index=True)
     user_id: uuid.UUID
 
     quantity: float
@@ -42,95 +140,43 @@ class MaterialReservation(SQLModel, table=True):
     expiration_date: Optional[date] = None
     status: str
 
-    material: Optional["Material"] = Relationship(back_populates="reservations")
-    pallet: Optional["Pallet"] = Relationship(back_populates="reservations")
+    resource: "Resource" = Relationship(back_populates="reservations")
+    pallet: "Pallet" = Relationship(back_populates="reservations")
 
 
-class MaterialMovement(SQLModel, table=True):
-    __tablename__ = "material_movement"
+class ResourceMovement(SQLModel, table=True):
+    __tablename__ = "resource_movement"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-
-    pallet_id: uuid.UUID = Field(foreign_key="pallet.id")
+    resource_id: uuid.UUID = Field(foreign_key="resource.id", index=True)
+    pallet_id: uuid.UUID = Field(foreign_key="pallet.id", index=True)
     movement_type: Optional[str]
 
-    source_location_id: uuid.UUID = Field(
-        foreign_key="warehouse_location.id", nullable=True
+    source_location_id: Optional[uuid.UUID] = Field(
+        foreign_key="warehouse_location.id", nullable=True, index=True
     )
-    destination_location_id: uuid.UUID = Field(foreign_key="warehouse_location.id")
+    destination_location_id: uuid.UUID = Field(
+        foreign_key="warehouse_location.id", index=True
+    )
 
     movement_date: datetime = Field(default_factory=datetime.now)
 
     order_id: uuid.UUID
     user_id: uuid.UUID
 
-    pallet: Optional["Pallet"] = Relationship(back_populates="movements")
-
-
-class Product(SQLModel, table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    name: str
-    code: str = Field(unique=True)
-    description: str
-
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: Optional[datetime] = None
-
-    boms: List["BillOfMaterials"] = Relationship(back_populates="product")
-    pallets: List["Pallet"] = Relationship(back_populates="product")
-
-
-class BillOfMaterials(SQLModel, table=True):
-    __tablename__ = "bill_of_materials"
-
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    product_id: uuid.UUID = Field(foreign_key="product.id")
-
-    name: str
-    valid_from: date
-    valid_to: Optional[date] = None
-    is_active: bool = True
-
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: Optional[datetime] = None
-
-    product: Optional["Product"] = Relationship(back_populates="boms")
-    bom_items: List["BOMItem"] = Relationship(back_populates="bom")
-    pallets: List["Pallet"] = Relationship(back_populates="bom")
-
-
-class BOMItem(SQLModel, table=True):
-    __tablename__ = "bom_item"
-
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    bom_id: uuid.UUID = Field(foreign_key="bill_of_materials.id")
-    material_id: uuid.UUID = Field(foreign_key="material.id")
-
-    quantity: float
-
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: Optional[datetime] = None
-
-    bom: Optional[BillOfMaterials] = Relationship(back_populates="bom_items")
-    material: Optional[Material] = Relationship(back_populates="bom_items")
+    resource: "Resource" = Relationship()
+    pallet: "Pallet" = Relationship(back_populates="movements")
 
 
 class Pallet(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 
-    item_type: PalletItemType = Field(default=PalletItemType.MATERIAL)
+    resource_id: uuid.UUID = Field(foreign_key="resource.id", index=True)
+    location_id: uuid.UUID = Field(foreign_key="warehouse_location.id", index=True)
 
-    material_id: Optional[uuid.UUID] = Field(foreign_key="material.id", nullable=True)
-    product_id: Optional[uuid.UUID] = Field(foreign_key="product.id", nullable=True)
-    bom_id: Optional[uuid.UUID] = Field(
-        foreign_key="bill_of_materials.id", nullable=True
-    )
-
-    location_id: uuid.UUID = Field(foreign_key="warehouse_location.id")
-
-    code: str = Field(unique=True)
+    code: str = Field(unique=True, index=True)
     quantity: float
-    status: Optional[str] = None
+    status: Optional[PalletStatus] = None
     production_date: date
     expiry_date: Optional[date] = None
     batch_number: str
@@ -138,13 +184,10 @@ class Pallet(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
 
-    reservations: List["MaterialReservation"] = Relationship(back_populates="pallet")
-    movements: List["MaterialMovement"] = Relationship(back_populates="pallet")
-    location: Optional["WarehouseLocation"] = Relationship(back_populates="pallets")
-
-    material: Optional["Material"] = Relationship(back_populates="pallets")
-    product: Optional["Product"] = Relationship(back_populates="pallets")
-    bom: Optional["BillOfMaterials"] = Relationship(back_populates="pallets")
+    resource: "Resource" = Relationship(back_populates="pallets")
+    location: "WarehouseLocation" = Relationship(back_populates="pallets")
+    movements: List["ResourceMovement"] = Relationship(back_populates="pallet")
+    reservations: List["ResourceReservation"] = Relationship(back_populates="pallet")
 
 
 class WarehouseLocation(SQLModel, table=True):
