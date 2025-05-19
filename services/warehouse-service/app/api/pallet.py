@@ -5,7 +5,12 @@ from sqlmodel import select
 
 from ..database import SessionDep
 from ..models.warehouse import Pallet, Resource, WarehouseLocation
-from ..schemas.pallet import PalletCreateSchema, PalletReadSchema, PalletUpdateSchema
+from ..schemas.pallet import (
+    PalletCreateSchema,
+    PalletReadSchema,
+    PalletUpdateSchema,
+    PalletWithLocationSchema,
+)
 
 
 def create_pallet(pallet: PalletCreateSchema, session: SessionDep):
@@ -56,3 +61,32 @@ def delete_pallet(pallet_id: uuid.UUID, session: SessionDep):
     session.delete(db_pallet)
     session.commit()
     return {"detail": "Pallet deleted"}
+
+
+def get_pallets_by_resource_id(resource_id: uuid.UUID, session: SessionDep):
+    statement = select(Pallet).where(Pallet.resource_id == resource_id)
+    pallets = session.exec(statement).all()
+
+    if not pallets:
+        raise HTTPException(
+            status_code=404, detail="No pallets found for this resource"
+        )
+
+    result = []
+    for pallet in pallets:
+        location = pallet.location
+        result.append(
+            PalletWithLocationSchema(
+                id=pallet.id,
+                code=pallet.code,
+                quantity=pallet.quantity,
+                status=pallet.status,
+                location_id=location.id,
+                location_zone=location.zone,
+                location_rack=location.rack,
+                location_level=location.level,
+                location_position=location.position,
+            )
+        )
+
+    return result

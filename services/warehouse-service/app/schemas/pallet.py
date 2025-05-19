@@ -36,3 +36,18 @@ class PalletReadSchema(PalletBaseSchema):
 
 class PalletUpdateSchema(PalletBaseSchema):
     id: uuid.UUID
+
+
+class PalletWithLocationSchema(BaseModel):
+    id: uuid.UUID
+    code: str
+    quantity: float
+    status: Optional[str]
+    location_id: uuid.UUID
+    location_zone: Optional[str]
+    location_rack: Optional[str]
+    location_level: Optional[str]
+    location_position: Optional[str]
+
+    class Config:
+        from_attributes = True

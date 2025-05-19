@@ -4,7 +4,12 @@ from fastapi import APIRouter
 
 from ..api import pallet
 from ..database import SessionDep
-from ..schemas.pallet import PalletBaseSchema, PalletCreateSchema, PalletReadSchema
+from ..schemas.pallet import (
+    PalletBaseSchema,
+    PalletCreateSchema,
+    PalletReadSchema,
+    PalletWithLocationSchema,
+)
 
 router = APIRouter(tags=["Pallet"])
 
@@ -36,3 +41,11 @@ def update_pallet_route(
 @router.delete("/warehouse/pallets/{pallet_id}")
 def delete_pallet_route(pallet_id: uuid.UUID, session: SessionDep):
     return pallet.delete_pallet(pallet_id=pallet_id, session=session)
+
+
+@router.get(
+    "/warehouse/pallets/by-resource/{resource_id}",
+    response_model=list[PalletWithLocationSchema],
+)
+def get_pallets_by_resource_route(resource_id: uuid.UUID, session: SessionDep):
+    return pallet.get_pallets_by_resource_id(resource_id=resource_id, session=session)
