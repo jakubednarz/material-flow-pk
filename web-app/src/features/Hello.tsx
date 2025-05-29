@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
-import React, { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import React from "react";
+import { useAuth } from "../hooks/useAuth";
 
 const Hello: React.FC = () => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useAuth();
   return (
     <div className="flex flex-col justify-center items-center min-h-[90vh] text-center">
       <img src="/cube.png" className="max-w-xs w-44 opacity-25 mb-4" />
