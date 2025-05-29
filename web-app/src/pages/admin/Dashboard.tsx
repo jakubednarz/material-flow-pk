@@ -12,7 +12,6 @@ import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import InventoryManagementPage from "./InventoryManagementPage";
 import WarehouseOperationsPage from "./WarehouseOperationsPage";
 import MonitoringAnalyticsPage from "./MonitoringAnalyticsPage";
-import InventoryRoundedIcon from "@mui/icons-material/InventoryRounded";
 import MoveDownRoundedIcon from "@mui/icons-material/MoveDownRounded";
 import BarChartRoundedIcon from "@mui/icons-material/BarChartRounded";
 import CategoryRoundedIcon from "@mui/icons-material/CategoryRounded";
@@ -24,6 +23,7 @@ import OrdersHistoryPage from "./OrdersHistoryPage";
 import ExternalOrdersPage from "./ExternalOrdersPage";
 import LaunchRoundedIcon from "@mui/icons-material/LaunchRounded";
 import { Icon } from "@mui/material";
+import Hello from "../../features/Hello";
 
 const AdminDashboard: React.FC = () => {
   const menuItems = [
@@ -124,6 +124,7 @@ const AdminDashboard: React.FC = () => {
         <Sidebar menuItems={menuItems} />
         <div className="flex-grow h-full overflow-auto">
           <Routes>
+            <Route path="/" element={<Hello />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/accounts" element={<Accounts />} />
             <Route path="/activity-history" element={<ActivityHistory />} />
