@@ -4,6 +4,7 @@ import Section from "../../components/Section";
 import CreateUserSection from "../../features/admin/CreateUserSection";
 import ListUsersSection from "../../features/admin/ListUsersSection";
 import ActiveAccountsSection from "../../features/admin/ActiveAccountsSection";
+import WorkforceDistributionSection from "../../features/admin/WorkforceDistributionSection";
 
 const Accounts: React.FC = () => {
   return (
@@ -24,12 +25,7 @@ const Accounts: React.FC = () => {
 
       <div className="w-5/12 flex-col space-y-4">
         <CreateUserSection />
-
-        <Section title="Workforce Distribution">
-          <Typography variant="h5" className="">
-            Bar/Pie Chart
-          </Typography>
-        </Section>
+        <WorkforceDistributionSection />
       </div>
     </div>
   );
