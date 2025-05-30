@@ -30,4 +30,7 @@ class UserCreateSchema(BaseModel):
 class UserUpdateSchema(BaseModel):
     username: str
     password: str
-    email: str | None = None
+    first_name: str
+    last_name: str
+    role: UserRoleEnum
+    disabled: bool = False

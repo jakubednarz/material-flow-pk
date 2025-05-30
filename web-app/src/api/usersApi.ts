@@ -14,9 +14,13 @@ export const usersApi = {
 
   updateUser: async (updatedUser: any) => {
     try {
-      const response = await axios.get(`/users/users`, {
-        withCredentials: true,
-      });
+      const response = await axios.put(
+        `/users/users/${updatedUser.id}`,
+        updatedUser,
+        {
+          withCredentials: true,
+        }
+      );
       return response;
     } catch (error) {
       throw error;
