@@ -4,7 +4,7 @@ import { useUsers } from "../../hooks/useUsers";
 
 const ActiveAccountsSection = () => {
   const { users = [], loading } = useUsers();
-  const activeUsers = users.filter((user) => !user.disabled);
+  const activeUsers = users?.filter((user) => user && !user.disabled) || [];
 
   return (
     <Section title="Number of active accounts">

@@ -11,7 +11,7 @@ const WorkforceDistributionSection = () => {
   const { users = [] } = useUsers();
 
   const roleCounts = users.reduce((acc: Record<string, number>, user) => {
-    const role = user.role || "Unknown";
+    const role = user?.role;
     acc[role] = (acc[role] || 0) + 1;
     return acc;
   }, {});
@@ -94,7 +94,7 @@ const WorkforceDistributionSection = () => {
                       {item.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {item.value} members ({item.percentage}%)
+                      {item.value} accounts ({item.percentage}%)
                     </Typography>
                   </Box>
                 </Box>
