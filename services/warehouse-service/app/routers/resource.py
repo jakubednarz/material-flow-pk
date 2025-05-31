@@ -25,24 +25,22 @@ from ..schemas.resource import (
 router = APIRouter(tags=["Resource"])
 
 
-@router.post(
-    "/warehouse/resources/", response_model=ResourceReadSchema, status_code=201
-)
+@router.post("/resources/", response_model=ResourceReadSchema, status_code=201)
 def create_resource_route(resource_schema: ResourceBaseSchema, session: SessionDep):
     return resource.create_resource(resource=resource_schema, session=session)
 
 
-@router.get("/warehouse/resources/", response_model=list[ResourceReadSchema])
+@router.get("/resources/", response_model=list[ResourceReadSchema])
 def get_all_resources_route(session: SessionDep):
     return resource.read_all_resources(session=session)
 
 
-@router.get("/warehouse/resources/{resource_id}", response_model=ResourceReadSchema)
+@router.get("/resources/{resource_id}", response_model=ResourceReadSchema)
 def get_resource_route(resource_id: uuid.UUID, session: SessionDep):
     return resource.read_resource(resource_id=resource_id, session=session)
 
 
-@router.put("/warehouse/resources/{resource_id}", response_model=ResourceReadSchema)
+@router.put("/resources/{resource_id}", response_model=ResourceReadSchema)
 def update_resource_route(
     resource_id: uuid.UUID, resource_data: ResourceBaseSchema, session: SessionDep
 ):
@@ -51,13 +49,13 @@ def update_resource_route(
     )
 
 
-@router.delete("/warehouse/resources/{resource_id}", status_code=204)
+@router.delete("/resources/{resource_id}", status_code=204)
 def delete_resource_route(resource_id: uuid.UUID, session: SessionDep):
     return resource.delete_resource(resource_id=resource_id, session=session)
 
 
 @router.get(
-    "/warehouse/materials/",
+    "/materials/",
     response_model=List[MaterialReadSchema],
 )
 def get_all_materials(session: SessionDep):
@@ -72,7 +70,7 @@ def get_all_materials(session: SessionDep):
 
 
 @router.get(
-    "/warehouse/boms/",
+    "/boms/",
     response_model=List[BOMReadSchema],
 )
 def get_all_boms(session: SessionDep):
@@ -121,7 +119,7 @@ def get_all_boms(session: SessionDep):
 
 
 @router.get(
-    "/warehouse/products/",
+    "/products/",
     response_model=List[ProductReadSchema],
 )
 def get_all_products(session: SessionDep):
