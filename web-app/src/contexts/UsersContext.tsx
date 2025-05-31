@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from "react";
+import React, { createContext, ReactNode } from "react";
 import { useState, useEffect } from "react";
 import { usersApi } from "../api/usersApi";
 import { useAuth } from "../hooks/useAuth";
@@ -57,6 +57,7 @@ const useUsersManager = () => {
   };
 
   const updateUser = async (updatedUser: User) => {
+    if (!isAuthenticated) return;
     try {
       const response = await usersApi.updateUser(updatedUser);
       setUsers((prevUsers) =>
@@ -75,6 +76,7 @@ const useUsersManager = () => {
   };
 
   const deleteUser = async (userId: string) => {
+    if (!isAuthenticated) return;
     try {
       await usersApi.deleteUser(userId);
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
@@ -89,6 +91,7 @@ const useUsersManager = () => {
   };
 
   const createUser = async (newUser: Omit<User, "id">) => {
+    if (!isAuthenticated) return;
     try {
       const response = await usersApi.createUser(newUser);
       setUsers((prevUsers) => [...prevUsers, response.data]);

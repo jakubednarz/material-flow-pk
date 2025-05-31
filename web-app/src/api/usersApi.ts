@@ -29,7 +29,7 @@ export const usersApi = {
 
   deleteUser: async (userId: any) => {
     try {
-      const response = await axios.get(`/users/users`, {
+      const response = await axios.delete(`/users/users/${userId}`, {
         withCredentials: true,
       });
       return response;

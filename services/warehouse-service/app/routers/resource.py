@@ -83,13 +83,10 @@ def get_all_boms(session: SessionDep):
 
     result = []
     for bom in boms:
-        # Pobierz wszystkie pozycje BOMu
         bom_items = session.exec(select(BOMItem).where(BOMItem.bom_id == bom.id)).all()
 
-        # Konwertuj pozycje BOMu na schemat odpowiedzi
         items = []
         for item in bom_items:
-            # Pobierz dane materiału
             material = session.get(Resource, item.material_id)
             if material:
                 items.append(
@@ -103,7 +100,6 @@ def get_all_boms(session: SessionDep):
                     )
                 )
 
-        # Stwórz obiekt BOM z pozycjami
         bom_read = BOMReadSchema(
             id=bom.id,
             name=bom.name,
@@ -138,26 +134,22 @@ def get_all_products(session: SessionDep):
 
     result = []
     for product in products:
-        # Pobierz wszystkie kompozycje produktu
         product_compositions = session.exec(
             select(ProductComposition).where(
                 ProductComposition.product_id == product.id
             )
         ).all()
 
-        # Konwertuj kompozycje na schemat odpowiedzi
         compositions = []
         for comp in product_compositions:
             bom_name = None
             material_name = None
 
-            # Pobierz nazwę BOMu jeśli używany
             if comp.bom_id:
                 bom = session.get(Resource, comp.bom_id)
                 if bom:
                     bom_name = bom.name
 
-            # Pobierz nazwę materiału jeśli używany bezpośrednio
             if comp.material_id:
                 material = session.get(Resource, comp.material_id)
                 if material:
@@ -174,7 +166,6 @@ def get_all_products(session: SessionDep):
                 )
             )
 
-        # Stwórz obiekt produktu z kompozycjami
         product_read = ProductReadSchema(
             id=product.id,
             name=product.name,
