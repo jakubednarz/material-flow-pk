@@ -19,6 +19,7 @@ import {
   IconButton,
 } from "@mui/material";
 import ResourceDetails from "../../components/warehouse/ResourceDetails";
+import { useResources } from "../../hooks/useResources";
 
 type Supplier = {
   id: string;
@@ -31,10 +32,10 @@ type Resource = {
   id: string;
   name: string;
   code: string;
-  description: string;
+  description?: string;
   type: string;
   min_stock: number;
-  current_stock: number;
+  quantity: number;
   created_at: string;
   updated_at?: string;
   image_url?: string;
@@ -42,87 +43,8 @@ type Resource = {
   suppliers?: Supplier[];
 };
 
-const resources: Resource[] = [
-  {
-    id: "1",
-    name: "Steel Sheet",
-    code: "MAT-001",
-    description:
-      "High-quality steel sheet for construction, ideal for structural applications and precision engineering",
-    type: "Material",
-    min_stock: 20,
-    current_stock: 8,
-    created_at: "2024-03-10T10:15:00Z",
-    updated_at: "2024-03-20T12:30:00Z",
-    manufacturer: "GlobalSteel Industries",
-    image_url: "/images/steel-sheet.jpg",
-    suppliers: [
-      {
-        id: "sup-001",
-        name: "MetalWorks Supplies Inc.",
-        contact: "John Doe",
-        address: "123 Industrial Park, Pittsburgh, PA 15201",
-      },
-      {
-        id: "sup-002",
-        name: "Precision Metal Solutions",
-        contact: "Sarah Johnson",
-        address: "456 Manufacturing Lane, Cleveland, OH 44101",
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Aluminum Rod",
-    code: "MAT-002",
-    description:
-      "Lightweight aluminum rod for manufacturing, perfect for aerospace and automotive industries",
-    type: "Product",
-    min_stock: 10,
-    current_stock: 80,
-    created_at: "2024-02-15T08:45:00Z",
-    manufacturer: "AluminumTech Corp",
-    image_url: "/images/aluminum-rod.jpg",
-    suppliers: [
-      {
-        id: "sup-003",
-        name: "Advanced Metal Suppliers",
-        contact: "Mike Rodriguez",
-        address: "789 Metallurgy Road, Detroit, MI 48201",
-      },
-    ],
-  },
-  {
-    id: "3",
-    name: "Plastic Cover",
-    code: "MAT-003",
-    description:
-      "Durable plastic cover for electronic devices, manufactured with high-impact resistant materials",
-    type: "BOM",
-    min_stock: 50,
-    current_stock: 120,
-    created_at: "2024-01-20T14:00:00Z",
-    updated_at: "2024-03-18T09:20:00Z",
-    manufacturer: "PolyTech Innovations",
-    image_url: "/images/plastic-cover.jpg",
-    suppliers: [
-      {
-        id: "sup-004",
-        name: "ElectroPlast Solutions",
-        contact: "Emily Chen",
-        address: "321 Polymer Street, San Jose, CA 95110",
-      },
-      {
-        id: "sup-005",
-        name: "Innovative Plastics Inc.",
-        contact: "David Kim",
-        address: "654 Technology Boulevard, Austin, TX 78701",
-      },
-    ],
-  },
-];
-
 const ResourcesCatalogSection: React.FC = () => {
+  const { resources = [], error, loading } = useResources();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("");
   const [searchId, setSearchId] = useState("");
@@ -216,7 +138,7 @@ const ResourcesCatalogSection: React.FC = () => {
                 <TableCell>{resource.id}</TableCell>
                 <TableCell>{resource.name}</TableCell>
                 <TableCell>{resource.type}</TableCell>
-                <TableCell align="center">{resource.current_stock}</TableCell>
+                <TableCell align="center">{resource.quantity}</TableCell>
                 <TableCell align="center">
                   <IconButton onClick={() => handleDetailsClick(resource)}>
                     <RemoveRedEyeIcon />

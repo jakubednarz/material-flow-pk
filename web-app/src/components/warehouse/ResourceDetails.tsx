@@ -20,10 +20,10 @@ type Resource = {
   id: string;
   name: string;
   code: string;
-  description: string;
+  description?: string;
   type: string;
   min_stock: number;
-  current_stock: number;
+  quantity: number;
   created_at: string;
   updated_at?: string;
   image_url?: string;
@@ -42,7 +42,7 @@ const ResourceDetails: React.FC<ResourceDetailsProps> = ({
   isDialogOpen,
   handleDialogClose,
 }) => {
-  const isLowStock = resource.current_stock < resource.min_stock;
+  const isLowStock = resource.quantity < resource.min_stock;
   const stockStatusColor = isLowStock ? "text-red-600" : "text-green-600";
 
   return (
@@ -101,7 +101,7 @@ const ResourceDetails: React.FC<ResourceDetailsProps> = ({
                 <div className="flex items-center space-x-3">
                   <Inventory className="text-gray-400" />
                   <Typography variant="h5" className="font-bold">
-                    {resource.current_stock}
+                    {resource.quantity}
                   </Typography>
                 </div>
               </div>
@@ -118,7 +118,7 @@ const ResourceDetails: React.FC<ResourceDetailsProps> = ({
               </div>
             </div>
             <StockProgressBar
-              currentStock={resource.current_stock}
+              currentStock={resource.quantity}
               minStock={resource.min_stock}
               isLowStock={isLowStock}
             />

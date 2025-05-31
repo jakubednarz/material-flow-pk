@@ -1,13 +1,16 @@
 import React from "react";
-import { AuthProvider } from "./contexts/AuthContext";
 import Router from "./Router";
+import { AuthProvider } from "./contexts/AuthContext";
 import { UsersProvider } from "./contexts/UsersContext";
+import { ResourcesProvider } from "./contexts/ResourcesContext";
 
 const App: React.FC = () => {
   return (
     <AuthProvider>
       <UsersProvider>
-        <Router />
+        <ResourcesProvider>
+          <Router />
+        </ResourcesProvider>
       </UsersProvider>
     </AuthProvider>
   );

@@ -3,7 +3,7 @@ import axios from "axios";
 export const resourcesApi = {
   getResources: async () => {
     try {
-      const response = await axios.get(`/resources/resources/`, {
+      const response = await axios.get(`/warehouse/resources/`, {
         withCredentials: true,
       });
       return response;
@@ -15,7 +15,7 @@ export const resourcesApi = {
   updateResource: async (updatedResource: any) => {
     try {
       const response = await axios.put(
-        `/resources/resources/${updatedResource.id}`,
+        `/warehouse/resources/${updatedResource.id}`,
         updatedResource,
         {
           withCredentials: true,
@@ -30,7 +30,7 @@ export const resourcesApi = {
   deleteResource: async (resourceId: any) => {
     try {
       const response = await axios.delete(
-        `/resources/resources/${resourceId}`,
+        `/warehouse/resources/${resourceId}`,
         {
           withCredentials: true,
         }
@@ -43,7 +43,7 @@ export const resourcesApi = {
 
   createResource: async (newResource: any) => {
     try {
-      const response = await axios.post(`/resources/create/`, newResource, {
+      const response = await axios.post(`/warehouse/resources/`, newResource, {
         withCredentials: true,
       });
       return response.data;
