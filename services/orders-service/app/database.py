@@ -6,6 +6,7 @@ from fastapi import Depends
 from sqlmodel import Session, SQLModel, create_engine
 
 from .models.orders import *  # noqa: F403
+from .models.suppliers import *  # noqa: F403
 
 find_dotenv()
 DATABASE_URL = os.getenv("ORDERS_DB_URL")
