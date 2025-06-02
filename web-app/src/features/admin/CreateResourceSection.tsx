@@ -9,12 +9,15 @@ import {
   MenuItem,
 } from "@mui/material";
 import CreateResourceForm from "../../components/forms/CreateResourceForm";
+import { useResources } from "../../hooks/useResources";
 
 const CreateResourceSection: React.FC = () => {
+  const { createResource } = useResources();
+
   const resources = [
-    { value: "material", label: "Material" },
-    { value: "bom", label: "BOM Item" },
-    { value: "product", label: "Product" },
+    { value: "Material", label: "Material" },
+    { value: "BillOfMaterials", label: "BOM Item" },
+    { value: "Product", label: "Product" },
   ];
 
   const [selectedResource, setSelectedResource] = useState<string>("");
@@ -34,12 +37,14 @@ const CreateResourceSection: React.FC = () => {
 
   const handleFormSubmit = (userData: {
     name: string;
-    code: string;
     type: string;
-    minimum_stock: number;
+    min_stock: number;
     description: string;
   }) => {
-    console.log("User Created:", { ...userData, resource: selectedResource });
+    createResource({
+      ...userData,
+      type: selectedResource,
+    });
     setIsDialogOpen(false);
   };
 

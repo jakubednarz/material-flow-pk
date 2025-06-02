@@ -7,9 +7,8 @@ interface CreateResourceFormProps {
   onClose: () => void;
   onSubmit: (resourceData: {
     name: string;
-    code: string;
     type: string;
-    minimum_stock: number;
+    min_stock: number;
     description: string;
   }) => void;
 }
@@ -21,9 +20,8 @@ const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
 }) => {
   const [formData, setFormData] = useState({
     name: "",
-    code: "",
     type: "",
-    minimum_stock: 0,
+    min_stock: 0,
     description: "",
   });
 
@@ -43,36 +41,24 @@ const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
         Create New Resource
       </Typography>
 
-      <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid item xs={6}>
-          <TextField
-            fullWidth
-            label="Resource Name"
-            name="resource_name"
-            variant="outlined"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            fullWidth
-            label="Resource Code"
-            name="resource_code"
-            variant="outlined"
-            value={formData.code}
-            onChange={handleChange}
-          />
-        </Grid>
+      <Grid container sx={{ mb: 2 }}>
+        <TextField
+          fullWidth
+          label="Resource Name"
+          name="name"
+          variant="outlined"
+          value={formData.name}
+          onChange={handleChange}
+        />
       </Grid>
 
       <TextField
         fullWidth
-        label="minimum_stock"
-        name="minimum_stock"
+        label="min_stock"
+        name="min_stock"
         type="number"
         variant="outlined"
-        value={formData.minimum_stock}
+        value={formData.min_stock}
         onChange={handleChange}
         sx={{ mb: 2 }}
       />

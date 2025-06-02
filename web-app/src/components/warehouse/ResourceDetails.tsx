@@ -19,12 +19,12 @@ type Supplier = {
 type Resource = {
   id: string;
   name: string;
-  code: string;
+  code?: string;
   description?: string;
   type: string;
   min_stock: number;
-  quantity: number;
-  created_at: string;
+  quantity?: number;
+  created_at?: string;
   updated_at?: string;
   image_url?: string;
   suppliers?: Supplier[];
@@ -42,7 +42,7 @@ const ResourceDetails: React.FC<ResourceDetailsProps> = ({
   isDialogOpen,
   handleDialogClose,
 }) => {
-  const isLowStock = resource.quantity < resource.min_stock;
+  const isLowStock = (resource.quantity ?? 0) < resource.min_stock;
   const stockStatusColor = isLowStock ? "text-red-600" : "text-green-600";
 
   return (
@@ -118,7 +118,7 @@ const ResourceDetails: React.FC<ResourceDetailsProps> = ({
               </div>
             </div>
             <StockProgressBar
-              currentStock={resource.quantity}
+              currentStock={resource.quantity ?? 0}
               minStock={resource.min_stock}
               isLowStock={isLowStock}
             />
@@ -164,7 +164,7 @@ const ResourceDetails: React.FC<ResourceDetailsProps> = ({
             <div className="flex items-center space-x-2">
               <CalendarToday fontSize="small" />
               <Typography variant="body2">
-                Created: {new Date(resource.created_at).toLocaleString()}
+                Created: {new Date(resource.created_at ?? "").toLocaleString()}
               </Typography>
             </div>
             {resource.updated_at && (

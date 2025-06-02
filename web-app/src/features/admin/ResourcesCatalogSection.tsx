@@ -31,12 +31,12 @@ type Supplier = {
 type Resource = {
   id: string;
   name: string;
-  code: string;
+  code?: string;
   description?: string;
   type: string;
   min_stock: number;
-  quantity: number;
-  created_at: string;
+  quantity?: number;
+  created_at?: string;
   updated_at?: string;
   image_url?: string;
   manufacturer?: string;
@@ -124,7 +124,7 @@ const ResourcesCatalogSection: React.FC = () => {
         <Table size="small">
           <TableHead className="bg-celestial bg-opacity-10">
             <TableRow>
-              <TableCell>ID</TableCell>
+              <TableCell>Code</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Type</TableCell>
               <TableCell align="center">Quantity</TableCell>
@@ -133,29 +133,32 @@ const ResourcesCatalogSection: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredResources.map((resource) => (
-              <TableRow key={resource.id}>
-                <TableCell>{resource.id}</TableCell>
-                <TableCell>{resource.name}</TableCell>
-                <TableCell>{resource.type}</TableCell>
-                <TableCell align="center">{resource.quantity}</TableCell>
-                <TableCell align="center">
-                  <IconButton onClick={() => handleDetailsClick(resource)}>
-                    <RemoveRedEyeIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell align="center">
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => console.log("Track")}
-                    sx={{ bgcolor: "#36a0fc" }}
-                  >
-                    Track
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {filteredResources.map((resource) => {
+              if (!resource) return null;
+              return (
+                <TableRow key={resource.id}>
+                  <TableCell>{resource.code || "N/A"}</TableCell>
+                  <TableCell>{resource.name}</TableCell>
+                  <TableCell>{resource.type}</TableCell>
+                  <TableCell align="center">{resource.quantity}</TableCell>
+                  <TableCell align="center">
+                    <IconButton onClick={() => handleDetailsClick(resource)}>
+                      <RemoveRedEyeIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={() => console.log("Track")}
+                      sx={{ bgcolor: "#36a0fc" }}
+                    >
+                      Track
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

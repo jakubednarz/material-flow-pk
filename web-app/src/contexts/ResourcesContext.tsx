@@ -5,18 +5,18 @@ import { resourcesApi } from "../api/resourcesApi";
 interface Resource {
   id: string;
   name: string;
-  code: string;
+  code?: string;
   description?: string;
   type: string;
 
   min_stock: number;
-  quantity: number;
+  quantity?: number;
 
   valid_from?: string;
   valid_to?: string;
   is_active?: boolean;
 
-  created_at: string;
+  created_at?: string;
   updated_at?: string;
 }
 
@@ -97,6 +97,7 @@ const useResourcesManager = () => {
     try {
       const response = await resourcesApi.createResource(newResource);
       setResources((prevResources) => [...prevResources, response.data]);
+      fetchResources();
     } catch (err) {
       const error =
         err instanceof Error ? err : new Error("Error while creating resource");
