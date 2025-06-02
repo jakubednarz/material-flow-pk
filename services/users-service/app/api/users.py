@@ -48,7 +48,6 @@ def update_user(user_id: uuid.UUID, user_data: UserUpdateSchema, session: Sessio
 
     for key, value in user_data.model_dump(exclude_unset=True).items():
         setattr(db_user, key, value)
-    db_user.password = hash_password(db_user.password)
 
     session.commit()
     session.refresh(db_user)
