@@ -32,22 +32,16 @@ class OrderPriority(str, Enum):
     URGENT = "Urgent"
 
 
-class OrderItemType(str, Enum):
-    MATERIAL = "Material"
-    PRODUCT = "Product"
-    BOM = "BillOfMaterials"
-
-
 class Order(SQLModel, table=True):
     __tablename__ = "orders"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     order_number: str = Field(unique=True, index=True)
 
-    type: str
-    direction: str
-    status: str
-    priority: str
+    type: OrderType
+    direction: OrderDirection
+    status: OrderStatus
+    priority: OrderPriority
 
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
