@@ -14,6 +14,7 @@ interface EditUserFormProps {
   onClose: () => void;
   user: any;
   onSubmit: (updatedUser: any) => void;
+  withDisabledToggle?: boolean;
 }
 
 const EditUserForm: React.FC<EditUserFormProps> = ({
@@ -21,6 +22,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
   onClose,
   user,
   onSubmit,
+  withDisabledToggle,
 }) => {
   const [formData, setFormData] = useState(user);
 
@@ -122,13 +124,18 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
         sx={{ mb: 2 }}
       />
 
-      <FormControlLabel
-        sx={{ mb: 2 }}
-        control={
-          <Switch checked={formData.disabled} onChange={handleDisabledChange} />
-        }
-        label="Disabled"
-      />
+      {!withDisabledToggle && (
+        <FormControlLabel
+          sx={{ mb: 2 }}
+          control={
+            <Switch
+              checked={formData.disabled}
+              onChange={handleDisabledChange}
+            />
+          }
+          label="Disabled"
+        />
+      )}
 
       <Button
         variant="contained"
