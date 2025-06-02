@@ -214,16 +214,6 @@ const ListOrdersSection: React.FC = () => {
                   >
                     <EditIcon />
                   </IconButton>
-                  <IconButton
-                    onClick={() => console.log("Approve Order", order.id)}
-                  >
-                    <CheckIcon color="success" />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => console.log("Reject Order", order.id)}
-                  >
-                    <CloseIcon color="error" />
-                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
