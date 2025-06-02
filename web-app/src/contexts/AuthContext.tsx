@@ -4,7 +4,11 @@ import { authApi } from "../api/authApi";
 interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
-  currentUser: any;
+  currentUser: {
+    username: string;
+    hashed_password: string;
+    disabled: boolean;
+  } | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }

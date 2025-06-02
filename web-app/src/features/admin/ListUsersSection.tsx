@@ -14,19 +14,7 @@ import {
 import Section from "../../components/Section";
 import EditUserForm from "../../components/forms/EditUserForm";
 import { useUsers } from "../../hooks/useUsers";
-
-interface User {
-  id: string;
-  username: string;
-  email?: string;
-  first_name: string;
-  last_name: string;
-  pesel?: string;
-  phone_number?: string;
-  address?: string;
-  role: string;
-  disabled: boolean;
-}
+import { User } from "../../types/User";
 
 const ListUsersSection: React.FC = () => {
   const { users = [], loading, error, updateUser, deleteUser } = useUsers();

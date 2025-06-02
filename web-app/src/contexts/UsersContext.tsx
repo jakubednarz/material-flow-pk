@@ -2,19 +2,7 @@ import React, { createContext, ReactNode } from "react";
 import { useState, useEffect } from "react";
 import { usersApi } from "../api/usersApi";
 import { useAuth } from "../hooks/useAuth";
-
-interface User {
-  id: string;
-  username: string;
-  email?: string;
-  first_name: string;
-  last_name: string;
-  pesel?: string;
-  phone_number?: string;
-  address?: string;
-  role: string;
-  disabled: boolean;
-}
+import { User } from "../types/User";
 
 interface UsersContextType {
   users: User[];
