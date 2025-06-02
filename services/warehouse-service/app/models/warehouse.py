@@ -5,6 +5,8 @@ from typing import List, Optional
 
 from sqlmodel import Field, Relationship, SQLModel
 
+from ..utils.code_generator import generate_code
+
 
 class ResourceType(str, Enum):
     MATERIAL = "Material"
@@ -26,7 +28,7 @@ class Resource(SQLModel, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str
-    code: str = Field(unique=True, index=True)
+    code: Optional[str] = Field(default=None, unique=True, index=True)
     description: Optional[str] = None
     type: ResourceType = Field(index=True)
 
@@ -67,6 +69,12 @@ class Resource(SQLModel, table=True):
         back_populates="bom",
         sa_relationship_kwargs={"primaryjoin": "Resource.id==BOMItem.bom_id"},
     )
+
+    def model_post_init(self, __context):
+        if not self.code:
+            self.code = (
+                generate_code(self.type.value[0:3].upper(), self.id.hex[:6].upper()),
+            )
 
 
 class BOMItem(SQLModel, table=True):

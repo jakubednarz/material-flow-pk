@@ -9,7 +9,6 @@ from ..models.warehouse import ResourceType
 
 class ResourceBaseSchema(BaseModel):
     name: str
-    code: str
     description: Optional[str] = None
     type: ResourceType
     min_stock: Optional[float] = None
@@ -20,6 +19,7 @@ class ResourceBaseSchema(BaseModel):
 
 class ResourceReadSchema(ResourceBaseSchema):
     id: uuid.UUID
+    code: str
     created_at: datetime
     updated_at: Optional[datetime] = None
     is_active: bool = True
