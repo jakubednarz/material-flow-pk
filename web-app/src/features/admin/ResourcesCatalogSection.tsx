@@ -17,6 +17,7 @@ import {
   InputLabel,
   Button,
   IconButton,
+  SelectChangeEvent,
 } from "@mui/material";
 import ResourceDetails from "../../components/warehouse/ResourceDetails";
 import { useResources } from "../../hooks/useResources";
@@ -47,7 +48,7 @@ const ResourcesCatalogSection: React.FC = () => {
   const { resources = [], error, loading } = useResources();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("");
-  const [searchId, setSearchId] = useState("");
+  const [searchCode, setSearchCode] = useState("");
   const [selectedResource, setSelectedResource] = useState<Resource | null>(
     null
   );
@@ -57,12 +58,12 @@ const ResourcesCatalogSection: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleSearchTypeChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-    setSearchType(e.target.value as string);
+  const handleSearchTypeChange = (e: SelectChangeEvent) => {
+    setSearchType(e.target.value);
   };
 
-  const handleSearchIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchId(e.target.value);
+  const handleSearchCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchCode(e.target.value);
   };
 
   const handleDetailsClick = (resource: Resource) => {
@@ -80,7 +81,7 @@ const ResourcesCatalogSection: React.FC = () => {
       (searchTerm === "" ||
         resource.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (searchType === "" || resource.type === searchType) &&
-      (searchId === "" || resource.id.includes(searchId))
+      (searchCode === "" || resource.code?.toLowerCase().includes(searchCode))
     );
   });
 
@@ -90,24 +91,24 @@ const ResourcesCatalogSection: React.FC = () => {
 
       <div className="flex gap-4 my-4">
         <TextField
-          label="Search by ID"
+          label="Search by Code"
           variant="outlined"
-          value={searchId}
-          onChange={handleSearchIdChange}
-          className="flex-grow"
+          value={searchCode}
+          onChange={handleSearchCodeChange}
+          className="flex-grow w-1/12"
         />
         <TextField
           label="Search by Name"
           variant="outlined"
           value={searchTerm}
           onChange={handleSearchTermChange}
-          className="flex-grow"
+          className="flex-grow w-1/6"
         />
         <FormControl variant="outlined" className="flex-grow">
           <InputLabel>Search by Type</InputLabel>
           <Select
             value={searchType}
-            onChange={() => handleSearchTypeChange}
+            onChange={handleSearchTypeChange}
             label="Search by Type"
           >
             <MenuItem value="">
@@ -115,7 +116,7 @@ const ResourcesCatalogSection: React.FC = () => {
             </MenuItem>
             <MenuItem value="Material">Material</MenuItem>
             <MenuItem value="Product">Product</MenuItem>
-            <MenuItem value="BOM">BOM</MenuItem>
+            <MenuItem value="BillOfMaterials">BOM</MenuItem>
           </Select>
         </FormControl>
       </div>
