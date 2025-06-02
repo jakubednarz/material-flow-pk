@@ -15,6 +15,10 @@ class UserSchema(BaseModel):
     role: UserRoleEnum = UserRoleEnum.WAREHOUSE_WORKER
     disabled: bool = False
 
+    pesel: str | None = None
+    phone_number: str | None = None
+    address: str | None = None
+
     class Config:
         from_attributes = True
 
@@ -34,3 +38,6 @@ class UserUpdateSchema(BaseModel):
     last_name: str
     role: UserRoleEnum
     disabled: bool = False
+    pesel: str | None = None
+    phone_number: str | None = None
+    address: str | None = None
