@@ -16,11 +16,11 @@ import MoveDownRoundedIcon from "@mui/icons-material/MoveDownRounded";
 import BarChartRoundedIcon from "@mui/icons-material/BarChartRounded";
 import CategoryRoundedIcon from "@mui/icons-material/CategoryRounded";
 import LocalShippingRoundedIcon from "@mui/icons-material/LocalShippingRounded";
-import InternalOrdersPage from "./InternalOrdersPage";
+import IncomingOrdersPage from "./IncomingOrdersPage";
 import SuppliersManagementPage from "./SuppliersManagementPage";
 import ReportsAnalyticsPage from "./ReportsAnalyticsPage";
 import OrdersHistoryPage from "./OrdersHistoryPage";
-import ExternalOrdersPage from "./ExternalOrdersPage";
+import OutgoingOrdersPage from "./OutgoingOrdersPage";
 import LaunchRoundedIcon from "@mui/icons-material/LaunchRounded";
 import { Icon } from "@mui/material";
 import Hello from "../../features/Hello";
@@ -78,9 +78,9 @@ const AdminDashboard: React.FC = () => {
     },
     {
       id: 8,
-      path: "/internal-orders",
+      path: "/incoming-orders",
       group: "Orders Management",
-      name: "Internal Orders",
+      name: "Incoming Orders",
       icon: (
         <Icon>
           <img src="/internal-link.png" alt="" />
@@ -89,9 +89,9 @@ const AdminDashboard: React.FC = () => {
     },
     {
       id: 9,
-      path: "/external-orders",
+      path: "/outgoing-orders",
       group: "Orders Management",
-      name: "External Orders",
+      name: "Outgoing Orders",
       icon: <LaunchRoundedIcon />,
     },
     {
@@ -140,8 +140,8 @@ const AdminDashboard: React.FC = () => {
               path="/monitoring-analytics"
               element={<MonitoringAnalyticsPage />}
             />
-            <Route path="/internal-orders" element={<InternalOrdersPage />} />
-            <Route path="/external-orders" element={<ExternalOrdersPage />} />
+            <Route path="/incoming-orders" element={<IncomingOrdersPage />} />
+            <Route path="/outgoing-orders" element={<OutgoingOrdersPage />} />
             <Route path="/orders-history" element={<OrdersHistoryPage />} />
             <Route
               path="/suppliers-management"
