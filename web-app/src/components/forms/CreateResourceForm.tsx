@@ -54,7 +54,7 @@ const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
 
       <TextField
         fullWidth
-        label="min_stock"
+        label="Minimum Stock"
         name="min_stock"
         type="number"
         variant="outlined"

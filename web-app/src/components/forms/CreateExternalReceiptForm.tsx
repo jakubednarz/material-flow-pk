@@ -12,18 +12,22 @@ import {
   IconButton,
   FormControlLabel,
   Checkbox,
-  Stack,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CustomDialog } from "../../components/CustomDialog";
+import { useResources } from "../../hooks/useResources";
 
-const allProducts = [
-  { id: "1", name: "Steel Rod" },
-  { id: "2", name: "Plastic Box" },
-  { id: "3", name: "Aluminum Sheet" },
-];
+type Supplier = {
+  id: string;
+  name: string;
+};
+
+type Resource = {
+  id: string;
+  name: string;
+};
 
 const allSuppliers = [
   { id: "s1", name: "Supplier One" },
@@ -34,11 +38,15 @@ const allSuppliers = [
 const storageLocations = ["A1", "A2", "B1", "C3", "D4"];
 const unitOptions = ["pcs", "kg", "liters", "pallets"];
 
-interface ProductEntry {
-  product: { id: string; name: string } | null;
+interface Pallet {
+  location: string;
   quantity: number;
   unit: string;
-  pallets: string[];
+}
+
+interface ProductEntry {
+  product: { id: string; name: string } | null;
+  pallets: Pallet[];
 }
 
 interface CreateExternalReceiptFormProps {
@@ -63,6 +71,8 @@ export const CreateExternalReceiptForm: React.FC<
 
   const [productEntries, setProductEntries] = useState<ProductEntry[]>([]);
 
+  const { resources = [] } = useResources();
+
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -74,7 +84,10 @@ export const CreateExternalReceiptForm: React.FC<
   const addProduct = () => {
     setProductEntries((prev) => [
       ...prev,
-      { product: null, quantity: 0, unit: "pcs", pallets: [""] },
+      {
+        product: null,
+        pallets: [{ location: "", quantity: 0, unit: "" }],
+      },
     ]);
   };
 
@@ -86,20 +99,25 @@ export const CreateExternalReceiptForm: React.FC<
 
   const setPalletCount = (index: number, count: number) => {
     const current = productEntries[index];
-    const pallets = Array(count)
-      .fill("")
-      .map((_, i) => current.pallets[i] || "");
+    const pallets: Pallet[] = Array(count)
+      .fill(null)
+      .map(
+        (_, i) => current.pallets[i] || { location: "", quantity: 0, unit: "" }
+      );
     updateProduct(index, { pallets });
   };
 
-  const updatePalletLocation = (
+  const updatePallet = (
     entryIndex: number,
     palletIndex: number,
-    location: string
+    updated: Partial<Pallet>
   ) => {
-    const updated = [...productEntries];
-    updated[entryIndex].pallets[palletIndex] = location;
-    setProductEntries(updated);
+    const updatedList = [...productEntries];
+    updatedList[entryIndex].pallets[palletIndex] = {
+      ...updatedList[entryIndex].pallets[palletIndex],
+      ...updated,
+    };
+    setProductEntries(updatedList);
   };
 
   const removeProduct = (index: number) => {
@@ -113,6 +131,7 @@ export const CreateExternalReceiptForm: React.FC<
       ...formData,
       receivedProducts: productEntries,
     };
+    console.log("Submitting receipt data:", finalData);
     onSubmit(finalData);
     onClose();
   };
@@ -193,7 +212,7 @@ export const CreateExternalReceiptForm: React.FC<
       </Typography>
 
       {productEntries.map((entry, i) => (
-        <Accordion key={i} sx={{ mb: 2, "&::before": { display: "none" } }}>
+        <Accordion key={i} sx={{ mb: 1, "&::before": { display: "none" } }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography
               sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
@@ -201,6 +220,7 @@ export const CreateExternalReceiptForm: React.FC<
               {entry.product?.name || `Product ${i + 1}`}
             </Typography>
             <IconButton
+              component="div"
               size="small"
               onClick={(e) => {
                 e.stopPropagation();
@@ -210,78 +230,84 @@ export const CreateExternalReceiptForm: React.FC<
               <DeleteIcon />
             </IconButton>
           </AccordionSummary>
+
           <AccordionDetails>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={9}>
                 <Autocomplete
                   disablePortal
-                  options={allProducts}
-                  getOptionLabel={(opt) => opt.name}
+                  options={resources}
+                  getOptionLabel={(opt: Resource) => opt.name}
                   value={entry.product}
                   onChange={(_, val) => updateProduct(i, { product: val })}
                   renderInput={(params) => (
-                    <TextField {...params} label="Product" />
+                    <TextField {...params} label="Product" fullWidth />
                   )}
                 />
               </Grid>
               <Grid item xs={6} sm={3}>
-                <TextField
-                  fullWidth
-                  label="Quantity"
-                  type="number"
-                  value={entry.quantity}
-                  onChange={(e) =>
-                    updateProduct(i, {
-                      quantity: parseInt(e.target.value || "0"),
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <Autocomplete
-                  disablePortal
-                  options={unitOptions}
-                  value={entry.unit}
-                  onChange={(_, val) =>
-                    updateProduct(i, { unit: val || "pcs" })
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} label="Unit" />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Number of Pallets"
                   type="number"
                   value={entry.pallets.length}
                   onChange={(e) =>
-                    setPalletCount(i, parseInt(e.target.value || "1"))
+                    setPalletCount(i, parseInt(e.target.value || "0"))
                   }
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1}>
-                  {entry.pallets.map((loc, pIdx) => (
+            </Grid>
+
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              {entry.pallets.map((pallet, pIdx) => (
+                <React.Fragment key={pIdx}>
+                  <Grid item xs={12} sm={5}>
                     <Autocomplete
                       disablePortal
-                      key={pIdx}
                       options={storageLocations}
-                      value={loc}
+                      value={pallet.location}
                       onChange={(_, val) =>
-                        updatePalletLocation(i, pIdx, val || "")
+                        updatePallet(i, pIdx, { location: val || "" })
                       }
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           label={`Pallet ${pIdx + 1} Location`}
+                          fullWidth
                         />
                       )}
                     />
-                  ))}
-                </Stack>
-              </Grid>
+                  </Grid>
+
+                  <Grid item xs={6} sm={2}>
+                    <TextField
+                      fullWidth
+                      label="Quantity"
+                      type="number"
+                      value={pallet.quantity}
+                      onChange={(e) =>
+                        updatePallet(i, pIdx, {
+                          quantity: parseInt(e.target.value || "0"),
+                        })
+                      }
+                    />
+                  </Grid>
+
+                  <Grid item xs={6} sm={2}>
+                    <Autocomplete
+                      disablePortal
+                      options={unitOptions}
+                      value={pallet.unit}
+                      onChange={(_, val) =>
+                        updatePallet(i, pIdx, { unit: val || "" })
+                      }
+                      renderInput={(params) => (
+                        <TextField {...params} label="Unit" fullWidth />
+                      )}
+                    />
+                  </Grid>
+                </React.Fragment>
+              ))}
             </Grid>
           </AccordionDetails>
         </Accordion>
